@@ -1,5 +1,5 @@
-import { removeDeadEpisodes } from 'podverse-orm'
-import { connectToDb } from '~/lib/db'
+import { connectToDb, removeDeadEpisodes } from 'podverse-orm'
+
 ;(async function () {
   try {
     const customLimit = (process.argv.length > 2 ? process.argv[2] : 100000) as any
