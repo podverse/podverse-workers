@@ -1,5 +1,6 @@
-import { connectToDb } from '~/lib/db'
-import { runLiveItemListener } from '~/services/podping'
+import { connectToDb } from 'podverse-orm'
+import { runLiveItemListener } from '../../services/podping'
+
 ;(async function () {
   await connectToDb()
 
