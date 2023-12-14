@@ -4,7 +4,7 @@ import { config } from '../../config'
 import { awsSQSInstance } from "../../factories/aws"
 import { parserInstance } from '../../factories/parser'
 import { podcastIndexInstance } from '../../factories/podcastIndex'
-import { createOrUpdatePodcastFromPodcastIndex } from './podcastIndex'
+import { createOrUpdatePodcastFromPodcastIndex, updateFeedUrlsIfNewAuthorityFeedUrlDetected } from './podcastIndex'
 
 export const addNewFeedsByPodcastIndexIdThenSendToQueue = async (client: any, podcastIndexIds: string[]) => {
   for (const podcastIndexId of podcastIndexIds) {
@@ -258,4 +258,81 @@ export const addFeedsToQueueForParsingByPodcastIndexId = async (podcastIndexIds:
   } catch (error) {
     console.log('queue:addFeedsToQueueForParsingByPodcastIndexId', error)
   }
+}
+
+/**
+ * addRecentlyUpdatedFeedUrlsToPriorityQueue
+ *
+ * Request a list of all podcast feeds that have been updated
+ * within the past X time from Podcast Index, then add
+ * the feeds that have a matching podcastIndexId in our database
+ * to the queue for parsing.
+ * sinceTime = epoch time to start from in seconds
+ */
+export const addRecentlyUpdatedFeedUrlsToPriorityQueue = async (sinceTime?: number) => {
+  try {
+    await connectToDb()
+
+    /* If no sinceTime provided, get all updated feeds from the past hour */
+    if (!sinceTime) {
+      sinceTime = Math.round(Date.now() / 1000) - 3600
+    }
+    const recentlyUpdatedFeeds = await getRecentlyUpdatedDataRecursively([], sinceTime)
+    console.log('total recentlyUpdatedFeeds count', recentlyUpdatedFeeds.length)
+
+    await updateFeedUrlsIfNewAuthorityFeedUrlDetected(recentlyUpdatedFeeds)
+
+    const recentlyUpdatedPodcastIndexIds = [] as any[]
+    for (const item of recentlyUpdatedFeeds) {
+      const { feedId } = item
+      if (feedId) {
+        recentlyUpdatedPodcastIndexIds.push(feedId)
+      }
+    }
+
+    // TODO: THIS TAKES A VERY LONG TIME TO COMPLETE,
+    // AND IS ARBITRARILY LIMITED TO 10000...
+    // const uniquePodcastIndexIds = [...new Set(recentlyUpdatedPodcastIndexIds)].slice(0, 10000)
+
+    // console.log('unique recentlyUpdatedPodcastIndexIds count', uniquePodcastIndexIds.length)
+
+    // Send the feedUrls with matching podcastIndexIds found in our database to
+    // the priority parsing queue for immediate parsing.
+    if (recentlyUpdatedPodcastIndexIds.length > 0) {
+      await addFeedsToQueueForParsingByPodcastIndexId(recentlyUpdatedPodcastIndexIds)
+    }
+  } catch (error) {
+    console.log('addRecentlyUpdatedFeedUrlsToPriorityQueue', error)
+  }
+}
+
+const getRecentlyUpdatedDataRecursively = async (accumulatedFeedData: any[] = [], since?: number): Promise<any[]> => {
+  console.log('getRecentlyUpdatedDataRecursively')
+  console.log('accumulatedFeedData.length', accumulatedFeedData.length)
+  const currentTime = Math.floor(Date.now() / 1000)
+  const axiosResponseData = await getRecentlyUpdatedData(since)
+  const { data, itemCount, nextSince } = axiosResponseData
+  console.log('itemCount', itemCount)
+  console.log('since', since)
+  console.log('nextSince', nextSince)
+  const { feeds } = data
+  console.log('feeds', feeds.length)
+  accumulatedFeedData = [...accumulatedFeedData, ...feeds]
+  console.log('accumulatedFeedData', accumulatedFeedData.length)
+  if (itemCount >= 5000) {
+    const timeRemainingSince = nextSince - currentTime
+    console.log('timeRemainingSince', timeRemainingSince)
+    return getRecentlyUpdatedDataRecursively(accumulatedFeedData, timeRemainingSince)
+  } else {
+    console.log('return final data', accumulatedFeedData.length)
+    return accumulatedFeedData
+  }
+}
+
+/* since = in seconds */
+const getRecentlyUpdatedData = async (since?: number) => {
+  let url = `${config.podcastIndex.baseUrl}/recent/data?max=5000`
+  url += `&since=${since ? since : -1800}`
+  const response = await podcastIndexInstance.podcastIndexAPIRequest(url)
+  return response && response.data
 }

@@ -1,27 +1,13 @@
-import { Podcast, connectToDb, getConnection, getFeedUrlByUrl, getPodcastsByPodcastIndexIds, getRepository } from 'podverse-orm'
+import axios from 'axios'
+import csv from 'csvtojson'
+import { Podcast, connectToDb, getAuthorityFeedUrlByPodcastIndexId, getConnection, getFeedUrlByUrl, getPodcastByPodcastIndexId, getPodcastsByPodcastIndexIds, getRepository } from 'podverse-orm'
 import shortid from 'shortid'
 import { parserInstance } from '../../factories/parser'
 import { config } from '../../config'
 import { podcastIndexInstance } from '../../factories/podcastIndex'
 
-const getPodcastByPodcastIndexId = async (client, podcastIndexId) => {
-  let podcasts = [] as any
-
-  if (podcastIndexId) {
-    podcasts = await client.query(
-      `
-      SELECT "authorityId", "podcastIndexId", id, title
-      FROM podcasts
-      WHERE "podcastIndexId"=$1;
-    `,
-      [podcastIndexId]
-    )
-  }
-
-  return podcasts[0]
-}
-
-export async function createOrUpdatePodcastFromPodcastIndex(client, item) {
+// TODO: replace client: any with client: EntityManager
+export async function createOrUpdatePodcastFromPodcastIndex(client: any, item: any) {
   console.log('-----------------------------------')
   console.log('createOrUpdatePodcastFromPodcastIndex')
 
@@ -225,3 +211,148 @@ export const updateHasPodcastIndexValueTags = async (podcastIndexIds: number[]) 
 
   console.log('updateHasPodcastIndexValueTags finished')
 }
+
+/**
+ * syncWithPodcastIndexFeedUrlsCSVDump
+ *
+ * Basically, this function parses a CSV file of feed URLs provided by Podcast Index,
+ * then adds each feed URL to our database if it doesn't already exist,
+ * and retires the previous feed URLs saved in our database for that podcast if any exist.
+ *
+ * Longer explanation...
+ * This looks for a file named podcastIndexFeedUrlsDump.csv, then iterates through
+ * every podcastIndexItem in the file, then retrieves all existing feedUrls in our database
+ * that have a matching podcastIndexIds.
+ *
+ * When no feedUrl for that podcastIndexId exists, then creates a new feedUrl
+ * using the podcastIndexItem's information.
+ *
+ * When a feedUrl for that podcastIndexId exists, then promote the item's new url
+ * to be the authority feedUrl for that podcast, and demote any other feedUrls for that podcast.
+ */
+export const syncWithPodcastIndexFeedUrlsCSVDump = async (rootFilePath: string) => {
+  await connectToDb()
+
+  try {
+    const csvFilePath = `${rootFilePath}/temp/podcastIndexFeedUrlsDump.csv`
+    console.log('syncWithPodcastIndexFeedUrlsCSVDump csvFilePath', csvFilePath)
+    const client = await getConnection().createEntityManager()
+    await csv()
+      .fromFile(csvFilePath)
+      .subscribe((json) => {
+        return new Promise<void>(async (resolve) => {
+          await new Promise((r) => setTimeout(r, 25))
+          try {
+            await createOrUpdatePodcastFromPodcastIndex(client, json)
+          } catch (error) {
+            console.log('podcastIndex:syncWithPodcastIndexFeedUrlsCSVDump subscribe error', error)
+          }
+
+          resolve()
+        })
+      })
+  } catch (error) {
+    console.log('podcastIndex:syncWithPodcastIndexFeedUrlsCSVDump', error)
+  }
+}
+
+type PodcastIndexDataFeed = {
+  feedId: number
+  feedUrl: string
+}
+
+/*
+  This function determines if the feed.url returned by Podcast Index is not currently
+  the authority feedUrl in our database. If it is not, then update our database to use
+  the newer feed.url provided by Podcast Index.
+*/
+export const updateFeedUrlsIfNewAuthorityFeedUrlDetected = async (podcastIndexDataFeeds: PodcastIndexDataFeed[]) => {
+  try {
+    console.log('updateFeedUrlsIfNewAuthorityFeedUrlDetected', podcastIndexDataFeeds?.length)
+    const client = await getConnection().createEntityManager()
+    if (Array.isArray(podcastIndexDataFeeds)) {
+      for (const podcastIndexDataFeed of podcastIndexDataFeeds) {
+        try {
+          if (podcastIndexDataFeed.feedId) {
+            const currentFeedUrl = await getAuthorityFeedUrlByPodcastIndexId(podcastIndexDataFeed.feedId.toString())
+            if (currentFeedUrl && currentFeedUrl.url !== podcastIndexDataFeed.feedUrl) {
+              const podcastIndexFeed = {
+                id: podcastIndexDataFeed.feedId,
+                url: podcastIndexDataFeed.feedUrl
+              }
+              await createOrUpdatePodcastFromPodcastIndex(client, podcastIndexFeed)
+            }
+          }
+        } catch (err) {
+          console.log('updateFeedUrlsIfNewAuthorityFeedUrlDetected podcastIndexDataFeed', err)
+        }
+      }
+    }
+  } catch (err) {
+    console.log('updateFeedUrlsIfNewAuthorityFeedUrlDetected err', err)
+  }
+}
+
+export const hideDeadPodcasts = async (fileUrl?: string) => {
+  const url = fileUrl ? fileUrl : 'https://public.podcastindex.org/podcastindex_dead_feeds.csv'
+
+  const response = await axios({
+    url,
+    headers: {
+      'Content-Type': 'text/csv'
+    }
+  })
+
+  try {
+    await csv({ noheader: true })
+      .fromString(response.data)
+      .subscribe((json) => {
+        return new Promise<void>(async (resolve) => {
+          await new Promise((r) => setTimeout(r, 5))
+          try {
+            if (json?.field1) {
+              try {
+                const podcast = await getPodcastByPodcastIndexId(json.field1)
+                if (podcast.isPublic) {
+                  const repository = getRepository(Podcast)
+                  podcast.isPublic = false
+                  await new Promise((resolve) => setTimeout(resolve, 100))
+                  await repository.save(podcast)
+                  console.log('feed hidden successfully!', json.field1, json.field2)
+                }
+              } catch (error: any) {
+                if (error.message.indexOf('not found') === -1) {
+                  console.log('error hiding podcast json', json)
+                  console.log('error hiding podcast json error message:', error)
+                } else {
+                  // console.log('feed already hidden', json.field1, json.field2)
+                }
+              }
+            }
+          } catch (error) {
+            console.log('podcastIndex:hideDeadPodcasts subscribe error', error)
+          }
+
+          resolve()
+        })
+      })
+  } catch (error) {
+    console.log('podcastIndex:hideDeadPodcasts', error)
+  }
+
+  console.log('hideDeadPodcasts finished')
+}
+
+export const addOrUpdatePodcastFromPodcastIndex = async (client: any, podcastIndexId: string) => {
+  const podcastIndexPodcast = await podcastIndexInstance.getPodcastFromPodcastIndexById(podcastIndexId)
+  const allowNonPublic = true
+  await createOrUpdatePodcastFromPodcastIndex(client, podcastIndexPodcast.feed)
+  const feedUrl = await getAuthorityFeedUrlByPodcastIndexId(podcastIndexId, allowNonPublic)
+
+  try {
+    await parserInstance.parseFeedUrl(feedUrl, allowNonPublic)
+  } catch (error) {
+    console.log('addOrUpdatePodcastFromPodcastIndex error', error)
+  }
+}
+

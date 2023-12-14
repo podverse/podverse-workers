@@ -26,6 +26,7 @@
   "devDependencies": {
     "@types/crypto-js": "^4.2.1",
     "@types/node": "^20.10.4",
+    "@types/shortid": "^0.0.32",
     "@types/web-push": "^3.3.2",
     "@types/ws": "^8.5.10",
     "@typescript-eslint/eslint-plugin": "^6.13.0",
@@ -39,6 +40,7 @@
     "aws-sdk": "2.814.0",
     "axios": "^1.6.2",
     "crypto-js": "^4.2.0",
+    "csvtojson": "^2.0.10",
     "docker-cli-js": "2.9.0",
     "podcast-partytime": "^4.8.0",
     "podverse-external-services": "^1.0.0",
