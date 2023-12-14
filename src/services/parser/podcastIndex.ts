@@ -343,6 +343,7 @@ export const hideDeadPodcasts = async (fileUrl?: string) => {
   console.log('hideDeadPodcasts finished')
 }
 
+// TODO: this is duplicated in podverse-api and should be removed somehow
 export const addOrUpdatePodcastFromPodcastIndex = async (client: any, podcastIndexId: string) => {
   const podcastIndexPodcast = await podcastIndexInstance.getPodcastFromPodcastIndexById(podcastIndexId)
   const allowNonPublic = true
@@ -355,4 +356,3 @@ export const addOrUpdatePodcastFromPodcastIndex = async (client: any, podcastInd
     console.log('addOrUpdatePodcastFromPodcastIndex error', error)
   }
 }
-
