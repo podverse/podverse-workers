@@ -9,7 +9,7 @@ import { addFeedsToQueueForParsingByPodcastIndexId } from './parser/queue'
   Run startup functions one time in the background.
   This should only be run in prod, or when you're sure you need it in development.
 */
-export const startup = async () => {
+export const podpingStartup = async () => {
   if (process.env.NODE_ENV === 'production') {
     await pullPodpingImage()
   }
@@ -154,9 +154,9 @@ export const runLiveItemListener = () => {
   async function reconnect() {
     try {
       await connect()
-    } catch (err) {
+    } catch (err: any) {
       logPerformance(
-        `WEBSOCKET_RECONNECT: Error ${new Error(err).message}, connectionIdCount: ${connectionIdCount}`,
+        `WEBSOCKET_RECONNECT: Error ${new Error(err.message)}, connectionIdCount: ${connectionIdCount}`,
         _logStart
       )
     }
