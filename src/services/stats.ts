@@ -6,7 +6,7 @@ import { config } from '../config'
 
 const url = `${config.matomo.baseUrl}`
 
-enum PagePaths {
+export enum StatsPagePaths {
   clips = 'clip',
   episodes = 'episode',
   podcasts = 'podcast',
@@ -36,7 +36,7 @@ enum StartDateOffset {
   }
 */
 
-enum TimeRanges {
+export enum StatsTimeRanges {
   // hour = 'pastHourTotalUniquePageviews',
   day = 'pastDayTotalUniquePageviews',
   week = 'pastWeekTotalUniquePageviews',
@@ -45,62 +45,62 @@ enum TimeRanges {
   allTime = 'pastAllTimeTotalUniquePageviews'
 }
 
-const generateGetAllRelatedDataQueryString = (finalPagePath: string, timeRange) => {
+const generateGetAllRelatedDataQueryString = (finalPagePath: string, timeRange: keyof typeof StatsTimeRanges) => {
   let queryString = 'pagePath: string, timeRange, tableName: string'
 
-  if (finalPagePath === PagePaths.podcasts) {
+  if (finalPagePath === StatsPagePaths.podcasts) {
     queryString = `
-      SELECT p.id, p."${TimeRanges[timeRange]}"
+      SELECT p.id, p."${StatsTimeRanges[timeRange]}"
       FROM "podcasts" p
-      WHERE p."${TimeRanges[timeRange]}">0
+      WHERE p."${StatsTimeRanges[timeRange]}">0
       AND p."hasVideo" IS FALSE
       AND p."medium" = 'podcast';
     `
-  } else if (finalPagePath === PagePaths.episodes) {
+  } else if (finalPagePath === StatsPagePaths.episodes) {
     queryString = `
-      SELECT e.id, e."${TimeRanges[timeRange]}"
+      SELECT e.id, e."${StatsTimeRanges[timeRange]}"
       FROM "episodes" e
       JOIN "podcasts" p ON p.id = e."podcastId"
-      WHERE e."${TimeRanges[timeRange]}">0
+      WHERE e."${StatsTimeRanges[timeRange]}">0
       AND p."hasVideo" IS FALSE
       AND p."medium" = 'podcast';
     `
-  } else if (finalPagePath === PagePaths.clips) {
+  } else if (finalPagePath === StatsPagePaths.clips) {
     queryString = `
-      SELECT id, "${TimeRanges[timeRange]}"
+      SELECT id, "${StatsTimeRanges[timeRange]}"
       FROM "mediaRefs"
-      WHERE "${TimeRanges[timeRange]}">0
+      WHERE "${StatsTimeRanges[timeRange]}">0
     `
-  } else if (finalPagePath === PagePaths.albums) {
+  } else if (finalPagePath === StatsPagePaths.albums) {
     queryString = `
-      SELECT p.id, p."${TimeRanges[timeRange]}"
+      SELECT p.id, p."${StatsTimeRanges[timeRange]}"
       FROM "podcasts" p
-      WHERE p."${TimeRanges[timeRange]}">0
+      WHERE p."${StatsTimeRanges[timeRange]}">0
       AND p."hasVideo" IS FALSE
       AND p."medium" = 'music';
     `
-  } else if (finalPagePath === PagePaths.tracks) {
+  } else if (finalPagePath === StatsPagePaths.tracks) {
     queryString = `
-      SELECT e.id, e."${TimeRanges[timeRange]}"
+      SELECT e.id, e."${StatsTimeRanges[timeRange]}"
       FROM "episodes" e
       JOIN "podcasts" p ON p.id = e."podcastId"
-      WHERE e."${TimeRanges[timeRange]}">0
+      WHERE e."${StatsTimeRanges[timeRange]}">0
       AND p."hasVideo" IS FALSE
       AND p."medium" = 'music';
     `
-  } else if (finalPagePath === PagePaths.channels) {
+  } else if (finalPagePath === StatsPagePaths.channels) {
     queryString = `
-      SELECT p.id, p."${TimeRanges[timeRange]}"
+      SELECT p.id, p."${StatsTimeRanges[timeRange]}"
       FROM "podcasts" p
-      WHERE "${TimeRanges[timeRange]}">0
+      WHERE "${StatsTimeRanges[timeRange]}">0
       AND p."hasVideo" IS TRUE;
     `
-  } else if (finalPagePath === PagePaths.videos) {
+  } else if (finalPagePath === StatsPagePaths.videos) {
     queryString = `
-      SELECT e.id, e."${TimeRanges[timeRange]}"
+      SELECT e.id, e."${StatsTimeRanges[timeRange]}"
       FROM "episodes" e
       JOIN "podcasts" p ON p.id = e."podcastId"
-      WHERE e."${TimeRanges[timeRange]}">0
+      WHERE e."${StatsTimeRanges[timeRange]}">0
       AND p."hasVideo" IS TRUE;
     `
   } else {
@@ -110,21 +110,21 @@ const generateGetAllRelatedDataQueryString = (finalPagePath: string, timeRange) 
   return queryString
 }
 
-const generateResetToZeroQueryString = (finalPagePath: string, timeRange, id: string) => {
+const generateResetToZeroQueryString = (finalPagePath: string, timeRange: keyof typeof StatsTimeRanges, id: string) => {
   let queryString = ''
 
-  if (finalPagePath === PagePaths.podcasts) {
+  if (finalPagePath === StatsPagePaths.podcasts) {
     queryString = `
       UPDATE "podcasts"
-      SET "${TimeRanges[timeRange]}"=0
+      SET "${StatsTimeRanges[timeRange]}"=0
       WHERE id='${id}'
       AND "hasVideo" IS FALSE
       AND "medium" = 'podcast';
     `
-  } else if (finalPagePath === PagePaths.episodes) {
+  } else if (finalPagePath === StatsPagePaths.episodes) {
     queryString = `
       UPDATE "episodes" e 
-      SET "${TimeRanges[timeRange]}" = 0
+      SET "${StatsTimeRanges[timeRange]}" = 0
       WHERE e.id = ${id}
       AND e."podcastId"
       IN (
@@ -135,24 +135,24 @@ const generateResetToZeroQueryString = (finalPagePath: string, timeRange, id: st
         AND p."medium" = 'podcast'
       );
     `
-  } else if (finalPagePath === PagePaths.clips) {
+  } else if (finalPagePath === StatsPagePaths.clips) {
     queryString = `
       UPDATE "mediaRefs" m
-      SET m."${TimeRanges[timeRange]}"=0
+      SET m."${StatsTimeRanges[timeRange]}"=0
       WHERE m.id='${id}';
     `
-  } else if (finalPagePath === PagePaths.albums) {
+  } else if (finalPagePath === StatsPagePaths.albums) {
     queryString = `
       UPDATE "podcasts"
-      SET "${TimeRanges[timeRange]}"=0
+      SET "${StatsTimeRanges[timeRange]}"=0
       WHERE id='${id}'
       AND "hasVideo" IS FALSE
       AND "medium" = 'music';
     `
-  } else if (finalPagePath === PagePaths.tracks) {
+  } else if (finalPagePath === StatsPagePaths.tracks) {
     queryString = `
       UPDATE "episodes" e 
-      SET "${TimeRanges[timeRange]}" = 0
+      SET "${StatsTimeRanges[timeRange]}" = 0
       WHERE e.id = ${id}
       AND e."podcastId"
       IN (
@@ -163,17 +163,17 @@ const generateResetToZeroQueryString = (finalPagePath: string, timeRange, id: st
         AND p."medium" = 'music'
       );
     `
-  } else if (finalPagePath === PagePaths.channels) {
+  } else if (finalPagePath === StatsPagePaths.channels) {
     queryString = `
       UPDATE "podcasts"
-      SET "${TimeRanges[timeRange]}"=0
+      SET "${StatsTimeRanges[timeRange]}"=0
       WHERE id='${id}'
       AND "hasVideo" IS TRUE;
     `
-  } else if (finalPagePath === PagePaths.videos) {
+  } else if (finalPagePath === StatsPagePaths.videos) {
     queryString = `
       UPDATE "episodes" e 
-      SET "${TimeRanges[timeRange]}" = 0
+      SET "${StatsTimeRanges[timeRange]}" = 0
       WHERE e.id = ${id}
       AND e."podcastId"
       IN (
@@ -190,21 +190,21 @@ const generateResetToZeroQueryString = (finalPagePath: string, timeRange, id: st
   return queryString
 }
 
-const generateSetNewCountQuery = (finalPagePath: string, timeRange, id: string, sum_daily_nb_uniq_visitors = 0) => {
+const generateSetNewCountQuery = (finalPagePath: string, timeRange: keyof typeof StatsTimeRanges, id: string, sum_daily_nb_uniq_visitors = 0) => {
   let queryString = ''
 
-  if (finalPagePath === PagePaths.podcasts) {
+  if (finalPagePath === StatsPagePaths.podcasts) {
     queryString = `
       UPDATE "podcasts"
-      SET "${TimeRanges[timeRange]}"=${sum_daily_nb_uniq_visitors}
+      SET "${StatsTimeRanges[timeRange]}"=${sum_daily_nb_uniq_visitors}
       WHERE id='${id}'
       AND "hasVideo" IS FALSE
       AND "medium" = 'podcast';
     `
-  } else if (finalPagePath === PagePaths.episodes) {
+  } else if (finalPagePath === StatsPagePaths.episodes) {
     queryString = `
       UPDATE "episodes" e 
-      SET e."${TimeRanges[timeRange]}"=${sum_daily_nb_uniq_visitors}
+      SET e."${StatsTimeRanges[timeRange]}"=${sum_daily_nb_uniq_visitors}
       WHERE e.id = ${id}
       AND e."podcastId"
       IN (
@@ -215,24 +215,24 @@ const generateSetNewCountQuery = (finalPagePath: string, timeRange, id: string, 
         AND p."medium" = 'podcast'
       );
     `
-  } else if (finalPagePath === PagePaths.clips) {
+  } else if (finalPagePath === StatsPagePaths.clips) {
     queryString = `
       UPDATE "mediaRefs" m
-      SET m."${TimeRanges[timeRange]}"=${sum_daily_nb_uniq_visitors}
+      SET m."${StatsTimeRanges[timeRange]}"=${sum_daily_nb_uniq_visitors}
       WHERE m.id='${id}';
     `
-  } else if (finalPagePath === PagePaths.albums) {
+  } else if (finalPagePath === StatsPagePaths.albums) {
     queryString = `
       UPDATE "podcasts"
-      SET "${TimeRanges[timeRange]}"=${sum_daily_nb_uniq_visitors}
+      SET "${StatsTimeRanges[timeRange]}"=${sum_daily_nb_uniq_visitors}
       WHERE id='${id}'
       AND "hasVideo" IS FALSE
       AND "medium" = 'music';
     `
-  } else if (finalPagePath === PagePaths.tracks) {
+  } else if (finalPagePath === StatsPagePaths.tracks) {
     queryString = `
       UPDATE "episodes" e 
-      SET e."${TimeRanges[timeRange]}"=${sum_daily_nb_uniq_visitors}
+      SET e."${StatsTimeRanges[timeRange]}"=${sum_daily_nb_uniq_visitors}
       WHERE e.id = ${id}
       AND e."podcastId"
       IN (
@@ -243,17 +243,17 @@ const generateSetNewCountQuery = (finalPagePath: string, timeRange, id: string, 
         AND p."medium" = 'music'
       );
     `
-  } else if (finalPagePath === PagePaths.channels) {
+  } else if (finalPagePath === StatsPagePaths.channels) {
     queryString = `
       UPDATE "podcasts"
-      SET "${TimeRanges[timeRange]}"=${sum_daily_nb_uniq_visitors}
+      SET "${StatsTimeRanges[timeRange]}"=${sum_daily_nb_uniq_visitors}
       WHERE id='${id}'
       AND "hasVideo" IS TRUE;
     `
-  } else if (finalPagePath === PagePaths.videos) {
+  } else if (finalPagePath === StatsPagePaths.videos) {
     queryString = `
       UPDATE "episodes" e 
-      SET e."${TimeRanges[timeRange]}"=${sum_daily_nb_uniq_visitors}
+      SET e."${StatsTimeRanges[timeRange]}"=${sum_daily_nb_uniq_visitors}
       WHERE e.id = ${id}
       AND e."podcastId"
       IN (
@@ -270,7 +270,7 @@ const generateSetNewCountQuery = (finalPagePath: string, timeRange, id: string, 
   return queryString
 }
 
-const savePageviewsToDatabase = async (finalPagePath: string, timeRange, data) => {
+const savePageviewsToDatabase = async (finalPagePath: string, timeRange: keyof typeof StatsTimeRanges, data: any) => {
   await connectToDb()
 
   const matomoDataRows = data
@@ -278,7 +278,7 @@ const savePageviewsToDatabase = async (finalPagePath: string, timeRange, data) =
   console.log('finalPagePath', finalPagePath)
   console.log('timeRange', timeRange)
   console.log('matomoDataRows.length', matomoDataRows.length)
-  console.log('TimeRange', TimeRanges[timeRange])
+  console.log('TimeRange', StatsTimeRanges[timeRange])
 
   /*
     The Matomo stats endpoint will only return data for pages that have a view in the past X days,
@@ -326,17 +326,17 @@ const savePageviewsToDatabase = async (finalPagePath: string, timeRange, data) =
   }
 }
 
-export const queryUniquePageviews = async (pagePath: string, timeRange) => {
-  const finalPagePath = PagePaths[pagePath]
-  const startDateOffset = parseInt(StartDateOffset[timeRange], 10)
+export const queryUniquePageviews = async (pagePath: keyof typeof StatsPagePaths, timeRange: keyof typeof StatsTimeRanges) => {
+  const finalPagePath = StatsPagePaths[pagePath]
+  const startDateOffset = parseInt(StartDateOffset[timeRange as any], 10)
 
-  if (!Object.keys(PagePaths).includes(pagePath)) {
+  if (!Object.keys(StatsPagePaths).includes(pagePath)) {
     console.log('A valid pagePath must be provided in the first parameter.')
     console.log('Valid options are: podcasts, episodes, clips, albums, tracks, channels, videos')
     return
   }
 
-  if (!Object.keys(TimeRanges).includes(timeRange)) {
+  if (!Object.keys(StatsTimeRanges).includes(timeRange)) {
     console.log('A valid timeRange must be provided in the second parameter.')
     console.log('Valid options are: day, week, month, year, allTime')
     return
@@ -381,19 +381,19 @@ export const queryUniquePageviews = async (pagePath: string, timeRange) => {
   const videoLimit = 40 // https://podverse.fm/video/12345678901234
 
   let filteredData: any[] = []
-  if (finalPagePath === PagePaths.podcasts) {
+  if (finalPagePath === StatsPagePaths.podcasts) {
     filteredData = filterCustomFeedUrls(data, podcastLimit)
-  } else if (finalPagePath === PagePaths.episodes) {
+  } else if (finalPagePath === StatsPagePaths.episodes) {
     filteredData = filterCustomFeedUrls(data, episodeLimit)
-  } else if (finalPagePath === PagePaths.clips) {
+  } else if (finalPagePath === StatsPagePaths.clips) {
     filteredData = filterCustomFeedUrls(data, clipLimit)
-  } else if (finalPagePath === PagePaths.albums) {
+  } else if (finalPagePath === StatsPagePaths.albums) {
     filteredData = filterCustomFeedUrls(data, albumLimit)
-  } else if (finalPagePath === PagePaths.tracks) {
+  } else if (finalPagePath === StatsPagePaths.tracks) {
     filteredData = filterCustomFeedUrls(data, trackLimit)
-  } else if (finalPagePath === PagePaths.channels) {
+  } else if (finalPagePath === StatsPagePaths.channels) {
     filteredData = filterCustomFeedUrls(data, channelLimit)
-  } else if (finalPagePath === PagePaths.videos) {
+  } else if (finalPagePath === StatsPagePaths.videos) {
     filteredData = filterCustomFeedUrls(data, videoLimit)
   }
 
@@ -408,7 +408,7 @@ export const queryUniquePageviews = async (pagePath: string, timeRange) => {
   Page URL -> Contains -> /album/
 */
 
-export const queryMatomoData = async (startDate, endDate, segmentPageUrl) => {
+export const queryMatomoData = async (startDate: string, endDate: string, segmentPageUrl: string) => {
   if (!config.matomo.authToken || !config.matomo.baseUrl || !config.matomo.siteId) {
     throw new Error('Matomo config variables missing.')
   }
