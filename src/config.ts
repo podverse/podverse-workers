@@ -9,10 +9,10 @@ export const config = {
       feedsToParse: {
         liveQueueUrl: process.env.AWS_QUEUE_URLS_FEEDS_TO_PARSE_LIVE_QUEUE_URL  || '',
         priorityQueueUrl: process.env.AWS_QUEUE_URLS_FEEDS_TO_PARSE_PRIORITY_QUEUE_URL  || '',
-        queueUrl: process.env.AWS_QUEUE_FEED_PARSER_URL || ''
+        queueUrl: process.env.AWS_QUEUE_URLS_FEEDS_TO_PARSE_QUEUE_URL || ''
       },
       selfManagedFeedsToParse: {
-        queueUrl: process.env.AWS_QUEUE_SELF_MANAGED_FEED_PARSER_URL || ''
+        queueUrl: process.env.AWS_QUEUE_URLS_SELF_MANAGED_FEEDS_TO_PARSE_QUEUE_URL || ''
       }
     },
     region: process.env.AWS_REGION  || '',
