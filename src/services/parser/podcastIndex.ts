@@ -1,7 +1,6 @@
 import axios from 'axios'
 import csv from 'csvtojson'
-import { Podcast, connectToDb, getAuthorityFeedUrlByPodcastIndexId, getConnection, getFeedUrlByUrl, getPodcastByPodcastIndexId, getPodcastsByPodcastIndexIds, getRepository } from 'podverse-orm'
-import shortid from 'shortid'
+import { Podcast, connectToDb, generateShortId, getAuthorityFeedUrlByPodcastIndexId, getConnection, getFeedUrlByUrl, getPodcastByPodcastIndexId, getPodcastsByPodcastIndexIds, getRepository } from 'podverse-orm'
 import { parserInstance } from '../../factories/parser'
 import { config } from '../../config'
 import { podcastIndexInstance } from '../../factories/podcastIndex'
@@ -31,7 +30,7 @@ export async function createOrUpdatePodcastFromPodcastIndex(client: any, item: a
         INSERT INTO podcasts (id, "authorityId", "podcastIndexId", "isPublic")
         VALUES ($1, $2, $3, $4);
       `,
-        [shortid(), itunesId, podcastIndexId, isPublic]
+        [generateShortId(), itunesId, podcastIndexId, isPublic]
       )
 
       existingPodcast = await getPodcastByPodcastIndexId(client, podcastIndexId)
@@ -113,7 +112,7 @@ export async function createOrUpdatePodcastFromPodcastIndex(client: any, item: a
         INSERT INTO "feedUrls" (id, "isAuthority", "url", "podcastId")
         VALUES ($1, $2, $3, $4);
       `,
-        [shortid(), isAuthority, url, existingPodcast.id]
+        [generateShortId(), isAuthority, url, existingPodcast.id]
       )
     }
   }
