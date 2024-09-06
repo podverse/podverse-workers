@@ -1,11 +1,7 @@
-FROM node:20
-WORKDIR /opt
-COPY ../helpers ./helpers
-COPY ../orm ./orm
-COPY ../parser ./parser
-COPY ../queue ./queue
-COPY ../workers ./workers
+FROM node:20-slim
 
-WORKDIR /opt/workers
+WORKDIR /opt
+COPY . .
+
 RUN npm install
 RUN npm run build
