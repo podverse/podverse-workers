@@ -1,19 +1,23 @@
 {
   "name": "podverse-workers",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "build": "tsc",
     "queueDeleteAll": "ts-node ./src/index.ts queueDeleteAll",
     "queueRSSAddAll": "ts-node ./src/index.ts queueRSSAddAll",
     "queueRSSRunParser": "ts-node ./src/index.ts queueRSSRunParser",
     "lint": "eslint 'src/**/*.{ts,js}'",
-    "start": "ts-node ./dist/index.js"
+    "start": "ts-node ./dist/index.js",
+    "prepare": "npm run build"
   },
   "author": "",
-  "license": "ISC",
+  "license": "AGPLv3",
   "dependencies": {
     "@dotenvx/dotenvx": "^1.6.4",
     "amqplib": "^0.10.4",
@@ -21,6 +25,8 @@
     "module-alias": "^2.2.3",
     "pg": "^8.12.0",
     "podcast-partytime": "^4.8.1",
+    "podverse-helpers": "^5.0.0",
+    "podverse-queue": "^5.0.0",
     "shortid": "^2.2.16",
     "typeorm": "^0.3.20",
     "typeorm-naming-strategies": "^4.1.0",
