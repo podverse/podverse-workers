@@ -1,5 +1,8 @@
 import './module-alias-config';
-require('@dotenvx/dotenvx').config();
+
+if (!process.env.NODE_ENV) {
+  require('@dotenvx/dotenvx').config();
+}
 
 import { logger } from 'podverse-helpers';
 import { AppDataSource } from 'podverse-orm';
