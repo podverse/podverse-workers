@@ -12,6 +12,7 @@
     "build": "tsc",
     "queueDeleteAll": "ts-node ./src/index.ts queueDeleteAll",
     "queueRSSAddAll": "ts-node ./src/index.ts queueRSSAddAll",
+    "queueRSSAddRecentlyUpdatedFeedsFromPodcastIndex": "ts-node ./src/index.ts queueRSSAddRecentlyUpdatedFeedsFromPodcastIndex",
     "queueRSSRunParser": "ts-node ./src/index.ts queueRSSRunParser",
     "lint": "eslint 'src/**/*.{ts,js}'",
     "start": "ts-node ./dist/index.js",
