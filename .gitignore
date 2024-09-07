@@ -1,5 +1,8 @@
 .git
 
+package-lock.json
+yarn.lock
+
 **/dist
 
 /src/config/bitpay/api.key
