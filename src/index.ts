@@ -25,11 +25,11 @@ const runApp = async () => {
     if (command) {
       await command(args);
     } else {
-      console.error(`Command "${commandName}" not found.`);
+      logger.error(`Command "${commandName}" not found.`);
     }
   
   } catch (error) {
-    console.error('Error running app:', error);
+    logger.error('Error running app:', error);
     process.exit(1);
   } finally {
     process.exit(0);
