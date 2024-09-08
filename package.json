@@ -8,7 +8,6 @@
     "dist/**/*"
   ],
   "scripts": {
-    "dev:watch": "nodemon --watch 'src' --watch $(realpath node_modules/podverse-helpers) --watch $(realpath node_modules/podverse-queue) --delay 500ms -x \"npm run build\"",
     "build": "tsc",
     "queueDeleteAll": "ts-node ./src/index.ts queueDeleteAll",
     "queueRSSAddAll": "ts-node ./src/index.ts queueRSSAddAll",
