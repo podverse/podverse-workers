@@ -4,7 +4,7 @@ if (!process.env.NODE_ENV) {
   require('@dotenvx/dotenvx').config();
 }
 
-import { logger } from 'podverse-helpers';
+import { logError, logger } from 'podverse-helpers';
 import { AppDataSource } from 'podverse-orm';
 import commands from '@workers/commands';
 import { parseArgs } from '@workers/commands/parseArgs';
@@ -25,11 +25,10 @@ const runApp = async () => {
     if (command) {
       await command(args);
     } else {
-      logger.error(`Command "${commandName}" not found.`);
+      logError(`runApp: Command "${commandName}" not found.`);
     }
-  
   } catch (error) {
-    logger.error('Error running app:', error);
+    logError('Error running app:', error as Error);
     process.exit(1);
   } finally {
     process.exit(0);
