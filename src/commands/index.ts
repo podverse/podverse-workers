@@ -1,3 +1,4 @@
+import { parserRSSParseFeed } from "@workers/commands/parser/rss/parseFeed";
 import { queueDeleteAll } from "@workers/commands/queue/deleteAll";
 import { queueRSSAddAll } from "@workers/commands/queue/rss/addAll";
 import { queueRSSRunParser } from "@workers/commands/queue/rss/runParser";
@@ -6,6 +7,7 @@ import { queueRSSAddRecentlyUpdatedFeedsFromPodcastIndex } from "@workers/comman
 export type CommandLineArgs = { [key: string]: string | string[] };
 
 export default {
+  parserRSSParseFeed,
   queueDeleteAll,
   queueRSSAddAll,
   queueRSSRunParser,
