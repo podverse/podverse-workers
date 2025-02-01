@@ -5,7 +5,7 @@ if (!process.env.NODE_ENV) {
 }
 
 import { logError, logger } from 'podverse-helpers';
-import { AppDataSource } from 'podverse-orm';
+import { AppDataSourceRead, AppDataSourceReadWrite } from 'podverse-orm';
 import commands from '@workers/commands';
 import { parseArgs } from '@workers/commands/parseArgs';
 
@@ -18,9 +18,10 @@ const command = commands[commandName];
 
 const runApp = async () => {
   try {
-    logger.info("Connecting to the database");
-    await AppDataSource.initialize();
-    logger.info("Connected to the database");
+    logger.info("Connecting to the databases");
+    await AppDataSourceRead.initialize();
+    await AppDataSourceReadWrite.initialize();
+    logger.info("Connected to the databases");
 
     if (command) {
       await command(args);
