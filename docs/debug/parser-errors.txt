@@ -1,0 +1,18 @@
+Command Example
+
+npm run parserRSSParseFeed -- -u https://wavlake.com/feed/music/e0956b28-9bff-4244-bc00-f2a243b56f20 -p 6830239
+
+---
+
+Erroring
+
+Due to 429 too many requests
+https://wavlake.com/feed/music/e0956b28-9bff-4244-bc00-f2a243b56f20 6830239
+
+---
+
+Fixed
+
+https://www.radiosega.net/feeds/picknmix.xml 957412
+
+https://abm.dharmaseed.org/feeds/teacher/86/?max-entries=all 2857577
