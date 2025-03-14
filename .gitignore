@@ -39,4 +39,4 @@ temp
 
 package-lock.json
 
-./config/firebase/firebase-podverse-app-key.json
+config/firebase/firebase-podverse-app-key.json
