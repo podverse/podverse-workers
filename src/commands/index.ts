@@ -1,4 +1,5 @@
 import { parserRSSParseFeed } from "@workers/commands/parser/rss/parseFeed";
+import { podcastIndexUpdateValueTagEnabledPodcastIds } from "@workers/commands/podcastIndex/valueTags/podcastIndexUpdateValueTagEnabledPodcastIds";
 import { queueDeleteAll } from "@workers/commands/queue/deleteAll";
 import { queueRSSAddAll } from "@workers/commands/queue/rss/addAll";
 import { queueRSSRunParser } from "@workers/commands/queue/rss/runParser";
@@ -9,6 +10,7 @@ export type CommandLineArgs = { [key: string]: string | string[] };
 
 export default {
   parserRSSParseFeed,
+  podcastIndexUpdateValueTagEnabledPodcastIds,
   queueDeleteAll,
   queueRSSAddAll,
   queueRSSRunParser,
