@@ -19,7 +19,8 @@
     "queueRSSAddAll": "ts-node ./src/index.ts queueRSSAddAll",
     "queueRSSAddRecentlyUpdatedFeedsFromPodcastIndex": "ts-node ./src/index.ts queueRSSAddRecentlyUpdatedFeedsFromPodcastIndex",
     "queueRSSRunParser": "ts-node ./src/index.ts queueRSSRunParser",
-    "sandboxRun": "ts-node ./src/index.ts sandboxRun"
+    "sandboxRun": "ts-node ./src/index.ts sandboxRun",
+    "statsUpdateAggregated": "ts-node ./src/index.ts statsUpdateAggregated"
   },
   "author": "",
   "license": "AGPLv3",
