@@ -7,11 +7,15 @@ import { queueRSSAddRecentlyUpdatedFeedsFromPodcastIndex } from "@workers/comman
 import { sandboxRun } from "@workers/commands/sandbox/sandbox";
 import { statsUpdateAggregated } from "@workers/commands/stats/statsUpdateAggregated";
 import { statsUpdateAggregatedRolling } from "@workers/commands/stats/statsUpdateAggregatedRolling";
+import { podcastIndexRemoveDeadFeeds } from "./podcastIndex/deadFeeds/podcastIndexRemoveDeadFeeds";
+import archiveAll from "./archiver/archiveAll";
 
 export type CommandLineArgs = { [key: string]: string | string[] };
 
 export default {
+  archiveAll,
   parserRSSParseFeed,
+  podcastIndexRemoveDeadFeeds,
   podcastIndexUpdateValueTagEnabledPodcastIds,
   queueDeleteAll,
   queueRSSAddAll,
