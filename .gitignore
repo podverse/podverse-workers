@@ -1,8 +1,5 @@
 .git
 
-package-lock.json
-yarn.lock
-
 **/dist
 
 /src/config/bitpay/api.key
@@ -12,10 +9,8 @@ yarn.lock
 /image_storage
 
 # API keys and secrets
-.env
-.env-old
-.env-old-removing
-
+**/.env*
+!**/.env.example
 
 # Dependency directory
 node_modules
