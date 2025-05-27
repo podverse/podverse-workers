@@ -1,6 +1,6 @@
 {
   "name": "podverse-workers",
-  "version": "5.0.4",
+  "version": "5.1.0-develop",
   "description": "",
   "private": true,
   "main": "dist/index.js",
@@ -13,7 +13,6 @@
     "lint": "eslint 'src/**/*.{ts,js}'",
     "start": "ts-node ./dist/index.js",
     "archiveAll": "ts-node ./src/index.ts archiveAll",
-    "prepublishOnly": "npm run build",
     "parserRSSParseFeed": "ts-node ./src/index.ts parserRSSParseFeed",
     "parserDevRSSParseFeed": "ts-node ./src/index.ts parserDevRSSParseFeed",
     "podcastIndexRemoveDeadFeeds": "ts-node ./src/index.ts podcastIndexRemoveDeadFeeds",
