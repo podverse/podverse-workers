@@ -1,6 +1,6 @@
 import './module-alias-config';
 
-if (!process.env.NODE_ENV) {
+if (process.env.NODE_ENV !== 'production') {
   require('@dotenvx/dotenvx').config();
 }
 
