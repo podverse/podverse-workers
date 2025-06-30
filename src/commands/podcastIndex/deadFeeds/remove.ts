@@ -1,14 +1,14 @@
 import { PodcastIndexService } from 'podverse-external-services';
 import { config } from '@workers/config';
 
-export const podcastIndexRemoveDeadFeeds = async () => {
+export const podcastIndexDeadFeedsRemove = async () => {
   const podcastIndexService = new PodcastIndexService({
     authKey: config.podcastIndex.authKey,
     baseUrl: config.podcastIndex.baseUrl,
     secretKey: config.podcastIndex.secretKey
   });
 
-  const results = await podcastIndexService.downloadAndExtractCSV();
+  const results = await podcastIndexService.deadFeedsDownloadAndExtractCSV();
 
   console.log(results.length);
   console.log(results[results.length - 6]);
