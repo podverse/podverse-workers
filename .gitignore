@@ -32,4 +32,4 @@ dist/**/*
 
 temp
 
-config/firebase/firebase-podverse-app-key.json
+config/firebase/firebase-key.json
