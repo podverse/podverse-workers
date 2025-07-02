@@ -4,9 +4,6 @@ if (process.env.NODE_ENV !== 'production') {
   require('@dotenvx/dotenvx').config();
 }
 
-console.log('Starting Podverse Worker...');
-console.log('Worker Environment Variables:', JSON.stringify(process.env));
-
 import { logError, logger } from 'podverse-helpers';
 import { AppDataSourceRead, AppDataSourceReadWrite } from 'podverse-orm';
 import commands from '@workers/commands';
