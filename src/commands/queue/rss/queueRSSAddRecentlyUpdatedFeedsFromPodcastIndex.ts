@@ -13,5 +13,18 @@ export const queueRSSAddRecentlyUpdatedFeedsFromPodcastIndex = async (args: Comm
     throw new Error(`Invalid queueName. Allowed values are: ${queueNames.join(', ')}`);
   }
 
-  await queueRSSAddRecentlyUpdatedFeedsFromPodcastIndexFunction({ queueName });
+  let sinceRange: number | undefined;
+  const sinceRangeArg = 'sinceRange' in args ? args.sinceRange : ('sr' in args ? args.sr : undefined);
+  if (sinceRangeArg !== undefined) {
+    const parsedSinceRange = parseInt(Array.isArray(sinceRangeArg) ? sinceRangeArg[0] : sinceRangeArg, 10);
+    if (!isNaN(parsedSinceRange) && parsedSinceRange > 0) {
+      sinceRange = parsedSinceRange;
+    }
+  }
+
+  if (!sinceRange) {
+    throw new Error('sinceRange (-sr) parameter is required');
+  }
+
+  await queueRSSAddRecentlyUpdatedFeedsFromPodcastIndexFunction({ queueName, sinceRange });
 };
