@@ -1,7 +1,11 @@
 import { PodcastIndexService } from 'podverse-external-services';
 import { config } from '@workers/config';
+import { DeduplicatorService } from '@workers/lib/deduplicator';
+import { CommandLineArgs } from '@workers/commands';
+// import { loadTestData } from './loadTestData';
 
-export const podcastIndexDeadFeedsRemove = async () => {
+export const podcastIndexDeadFeedsRemove = async (args: CommandLineArgs) => {
+  const numberOfLatestFeeds = (args.n ?? args.numberOfLatestFeeds ?? '-10').toString();
   const podcastIndexService = new PodcastIndexService({
     authKey: config.podcastIndex.authKey,
     baseUrl: config.podcastIndex.baseUrl,
@@ -9,13 +13,18 @@ export const podcastIndexDeadFeedsRemove = async () => {
   });
 
   const results = await podcastIndexService.deadFeedsDownloadAndExtractCSV();
+  
+  const deduplicatorService = new DeduplicatorService();
 
-  console.log(results.length);
-  console.log(results[results.length - 6]);
-  console.log(results[results.length - 5]);
-  console.log(results[results.length - 4]);
-  console.log(results[results.length - 3]);
-  console.log(results[results.length - 2]);
-  console.log(results[results.length - 1]);
-  console.log(results[results.length - 0]);
+  const shortResults = results.slice(-parseInt(numberOfLatestFeeds)).reverse();
+
+  for (const result of shortResults) {
+    try {
+      const { id_to_remove, duplicate_id_to_keep } = result;
+      // await loadTestData(duplicate_id_to_keep, id_to_remove);
+      await deduplicatorService.handleDuplicatePodcastIndexId(id_to_remove, duplicate_id_to_keep);
+    } catch (error) {
+      console.error(`Error processing podcast_index_id: ${result.podcast_index_id}`, error);
+    }
+  }
 };
