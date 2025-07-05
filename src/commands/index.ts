@@ -8,7 +8,7 @@ import { queueRSSAddTrendingPodcastsFromPodcastIndex } from "@workers/commands/q
 import { sandboxRun } from "@workers/commands/sandbox/sandbox";
 import { statsUpdateAggregated } from "@workers/commands/stats/statsUpdateAggregated";
 import { statsUpdateAggregatedRolling } from "@workers/commands/stats/statsUpdateAggregatedRolling";
-import { podcastIndexDeadFeedsRemove } from "./podcastIndex/deadFeeds/remove";
+import { podcastIndexFlagAndMergeDeadFeeds } from "./podcastIndex/deadFeeds/flagAndMerge";
 import archiveAll from "./archiver/archiveAll";
 import podcastIndexTrendingPodcastsGet from "./podcastIndex/trending/podcastsGet";
 
@@ -17,7 +17,7 @@ export type CommandLineArgs = { [key: string]: string | string[] };
 export default {
   archiveAll,
   parserRSSParseFeed,
-  podcastIndexDeadFeedsRemove,
+  podcastIndexFlagAndMergeDeadFeeds,
   podcastIndexTrendingPodcastsGet,
   podcastIndexValueUpdateAll,
   queueDeleteAll,

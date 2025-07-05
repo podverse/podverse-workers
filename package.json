@@ -15,7 +15,7 @@
     "archive_all": "ts-node ./src/index.ts archiveAll",
     "parser_rss_parse_feed": "ts-node ./src/index.ts parserRSSParseFeed",
     "parser_dev_rss_parse_feed": "ts-node ./src/index.ts parserDevRSSParseFeed",
-    "podcast_index_dead_feeds_remove": "ts-node ./src/index.ts podcastIndexDeadFeedsRemove",
+    "podcast_index_flag_and_merge_dead_feeds": "ts-node ./src/index.ts podcastIndexFlagAndMergeDeadFeeds",
     "podcast_index_trending_podcasts_get": "ts-node ./src/index.ts podcastIndexTrendingPodcastsGet",
     "podcast_index_value_update_all": "ts-node ./src/index.ts podcastIndexValueUpdateAll",
     "queue_delete_all": "ts-node ./src/index.ts queueDeleteAll",

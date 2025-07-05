@@ -4,7 +4,7 @@ import { DeduplicatorService } from '@workers/lib/deduplicator';
 import { CommandLineArgs } from '@workers/commands';
 // import { loadTestData } from './loadTestData';
 
-export const podcastIndexDeadFeedsRemove = async (args: CommandLineArgs) => {
+export const podcastIndexFlagAndMergeDeadFeeds = async (args: CommandLineArgs) => {
   const numberOfLatestFeeds = (args.n ?? args.numberOfLatestFeeds ?? '-10').toString();
   const podcastIndexService = new PodcastIndexService({
     authKey: config.podcastIndex.authKey,
@@ -20,9 +20,9 @@ export const podcastIndexDeadFeedsRemove = async (args: CommandLineArgs) => {
 
   for (const result of shortResults) {
     try {
-      const { id_to_remove, duplicate_id_to_keep } = result;
-      // await loadTestData(duplicate_id_to_keep, id_to_remove);
-      await deduplicatorService.handleDuplicatePodcastIndexId(id_to_remove, duplicate_id_to_keep);
+      const { id_to_archive, duplicate_id_to_keep } = result;
+      // await loadTestData(duplicate_id_to_keep, id_to_archive);
+      await deduplicatorService.handleDuplicatePodcastIndexId(id_to_archive, duplicate_id_to_keep);
     } catch (error) {
       console.error(`Error processing podcast_index_id: ${result.podcast_index_id}`, error);
     }
