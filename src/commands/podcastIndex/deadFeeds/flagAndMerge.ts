@@ -5,7 +5,7 @@ import { CommandLineArgs } from '@workers/commands';
 // import { loadTestData } from './loadTestData';
 
 export const podcastIndexFlagAndMergeDeadFeeds = async (args: CommandLineArgs) => {
-  const numberOfLatestFeeds = (args.n ?? args.numberOfLatestFeeds ?? '-10').toString();
+  const numberOfLatestFeeds = (args.n ?? args.numberOfLatestFeeds ?? '10').toString();
   const podcastIndexService = new PodcastIndexService({
     authKey: config.podcastIndex.authKey,
     baseUrl: config.podcastIndex.baseUrl,
