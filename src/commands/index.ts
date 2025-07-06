@@ -1,7 +1,7 @@
 import archiveAll from "@workers/commands/archiver/archiveAll";
 import { ormFeedUpdateFlagStatus } from "@workers/commands/orm/feed/updateFlagStatus";
 import { parserRSSParseFeed } from "@workers/commands/parser/rss/parseFeed";
-import { podcastIndexFlagAndMergeDeadFeeds } from "@workers/commands/podcastIndex/deadFeeds/flagAndMerge";
+import { podcastIndexDeadFeedsDeleteCache, podcastIndexDeadFeedsFlagAndMerge } from "@workers/commands/podcastIndex/deadFeeds/flagAndMerge";
 import podcastIndexTrendingPodcastsGet from "@workers/commands/podcastIndex/trending/podcastsGet";
 import { podcastIndexValueUpdateAll } from "@workers/commands/podcastIndex/value/updateAll";
 import { queueDeleteAll } from "@workers/commands/queue/deleteAll";
@@ -20,7 +20,8 @@ export default {
   archiveAll,
   ormFeedUpdateFlagStatus,
   parserRSSParseFeed,
-  podcastIndexFlagAndMergeDeadFeeds,
+  podcastIndexDeadFeedsDeleteCache,
+  podcastIndexDeadFeedsFlagAndMerge,
   podcastIndexTrendingPodcastsGet,
   podcastIndexValueUpdateAll,
   queueDeleteAll,

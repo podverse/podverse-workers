@@ -26,7 +26,20 @@ function saveCache(cache: Set<number>) {
   }
 }
 
-export const podcastIndexFlagAndMergeDeadFeeds = async () => {
+export function podcastIndexDeadFeedsDeleteCache() {
+  try {
+    if (fs.existsSync(CACHE_FILE_PATH)) {
+      fs.unlinkSync(CACHE_FILE_PATH);
+      console.log('Cache file deleted.');
+    } else {
+      console.log('Cache file does not exist.');
+    }
+  } catch (err) {
+    console.error('Failed to delete cache file:', err);
+  }
+}
+
+export const podcastIndexDeadFeedsFlagAndMerge = async () => {
   const podcastIndexService = new PodcastIndexService({
     authKey: config.podcastIndex.authKey,
     baseUrl: config.podcastIndex.baseUrl,
