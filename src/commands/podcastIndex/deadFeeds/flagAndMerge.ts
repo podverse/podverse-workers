@@ -1,30 +1,29 @@
 import { PodcastIndexService } from 'podverse-external-services';
 import { config } from '@workers/config';
 import { DeduplicatorService } from '@workers/lib/deduplicator';
-import { CommandLineArgs } from '@workers/commands';
-// import { loadTestData } from './loadTestData';
+import { sleep } from 'podverse-helpers';
 
-export const podcastIndexFlagAndMergeDeadFeeds = async (args: CommandLineArgs) => {
-  const numberOfLatestFeeds = (args.n ?? args.numberOfLatestFeeds ?? '10').toString();
+export const podcastIndexFlagAndMergeDeadFeeds = async () => {
   const podcastIndexService = new PodcastIndexService({
     authKey: config.podcastIndex.authKey,
     baseUrl: config.podcastIndex.baseUrl,
     secretKey: config.podcastIndex.secretKey
   });
-
-  const results = await podcastIndexService.deadFeedsDownloadAndExtractCSV();
   
   const deduplicatorService = new DeduplicatorService();
 
-  const shortResults = results.slice(-parseInt(numberOfLatestFeeds)).reverse();
-
-  for (const result of shortResults) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async function resolveHandler(data: any) {
+    const parsedData = podcastIndexService.deadFeedsExtractRow(data);
     try {
-      const { id_to_archive, duplicate_id_to_keep } = result;
-      // await loadTestData(duplicate_id_to_keep, id_to_archive);
+      const { id_to_archive, duplicate_id_to_keep } = parsedData;
       await deduplicatorService.handleDuplicatePodcastIndexId(id_to_archive, duplicate_id_to_keep);
+      await sleep(2);
     } catch (error) {
-      console.error(`Error processing podcast_index_id: ${result.podcast_index_id}`, error);
+      console.error('Error processing dead feed:', error);
+      console.error('Data that caused the error:', parsedData);
     }
   }
+
+  await podcastIndexService.deadFeedsDownloadAndExtractCSV(resolveHandler);
 };
