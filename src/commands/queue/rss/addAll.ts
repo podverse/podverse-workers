@@ -1,5 +1,6 @@
 import { QueueName, queueNames, queueRSSAddAll as queueRSSAddAllFunction } from 'podverse-queue';
 import { CommandLineArgs } from "@workers/commands";
+import { rabbitMQService } from '@workers/factories/rabbitMQService';
 
 export const queueRSSAddAll = async (args: CommandLineArgs) => {
   const queueName = Array.isArray(args.q) ? args.q[0] : args.q;
@@ -11,5 +12,8 @@ export const queueRSSAddAll = async (args: CommandLineArgs) => {
     throw new Error(`Invalid queueName. Allowed values are: ${queueNames.join(', ')}`);
   }
 
-  await queueRSSAddAllFunction({ queueName: queueName as QueueName });
+  await queueRSSAddAllFunction(
+    rabbitMQService,
+    { queueName: queueName as QueueName }
+  );
 };

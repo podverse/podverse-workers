@@ -1,4 +1,6 @@
 import { CommandLineArgs } from '@workers/commands';
+import { podcastIndexService } from '@workers/factories/podcastIndexService';
+import { rabbitMQService } from '@workers/factories/rabbitMQService';
 import { QueueName, queueNames,
   queueRSSAddRecentlyUpdatedFeedsFromPodcastIndex as queueRSSAddRecentlyUpdatedFeedsFromPodcastIndexFunction
 } from 'podverse-queue';
@@ -26,5 +28,9 @@ export const queueRSSAddRecentlyUpdatedFeedsFromPodcastIndex = async (args: Comm
     throw new Error('sinceRange (-sr) parameter is required');
   }
 
-  await queueRSSAddRecentlyUpdatedFeedsFromPodcastIndexFunction({ queueName, sinceRange });
+  await queueRSSAddRecentlyUpdatedFeedsFromPodcastIndexFunction(
+    rabbitMQService,
+    podcastIndexService,
+    { queueName, sinceRange }
+  );
 };

@@ -1,7 +1,7 @@
 import { QueueName, queueNames, queueRSSAdd as queueRSSAddFunction } from 'podverse-queue';
 import { CommandLineArgs } from "@workers/commands";
-import { PodcastIndexService } from 'podverse-external-services';
-import { config } from '@workers/config';
+import { rabbitMQService } from '@workers/factories/rabbitMQService';
+import { podcastIndexService } from '@workers/factories/podcastIndexService';
 
 export const queueRSSAdd = async (args: CommandLineArgs) => {
   const queueName = Array.isArray(args.q) ? args.q[0] : args.q;
@@ -22,12 +22,6 @@ export const queueRSSAdd = async (args: CommandLineArgs) => {
   if (isNaN(podcastIndexId)) {
     throw new Error('podcast_index_id (-p) must be a number');
   }
-  
-  const podcastIndexService = new PodcastIndexService({
-    authKey: config.podcastIndex.authKey,
-    baseUrl: config.podcastIndex.baseUrl,
-    secretKey: config.podcastIndex.secretKey
-  });
 
   const feedData = await podcastIndexService.podcastGetById(podcastIndexId);
   const feedUrl = feedData?.feed?.url;
@@ -35,9 +29,12 @@ export const queueRSSAdd = async (args: CommandLineArgs) => {
     throw new Error(`No feedUrl found for podcast_index_id ${podcastIndexId}`);
   }
 
-  await queueRSSAddFunction({
-    queueName: queueName as QueueName,
-    feedUrl,
-    podcastIndexId
-  });
+  await queueRSSAddFunction(
+    rabbitMQService,
+    {
+      queueName: queueName as QueueName,
+      feedUrl,
+      podcastIndexId
+    }
+  );
 };

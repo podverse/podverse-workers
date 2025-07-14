@@ -1,6 +1,7 @@
-import { TIME_CONSTANTS, timerManager } from 'podverse-helpers';
+import { TIME_CONSTANTS } from 'podverse-helpers';
 import { StatsAggregatedChannelService, StatsAggregatedAccountService, StatsAggregatedClipService, StatsAggregatedItemService, StatsAggregatedPlaylistService, StatsTrackEventAccountService, StatsTrackEventChannelService, StatsTrackEventClipService, StatsTrackEventItemService, StatsTrackEventPlaylistService } from 'podverse-orm';
 import { CommandLineArgs } from "@workers/commands";
+import { timerManager } from '@workers/factories/timerManager';
 
 const limit = 500;
 

@@ -1,11 +1,10 @@
-import { logger } from 'podverse-helpers';
-import { PodcastIndexService } from 'podverse-external-services';
-import { config } from '@workers/config';
 import { CommandLineArgs } from '@workers/commands';
+import { loggerService } from '@workers/factories/loggerService';
+import { podcastIndexService } from '@workers/factories/podcastIndexService';
 
 const podcastIndexTrendingPodcastsGet = async (args: CommandLineArgs) => {
   try {
-    logger.info('[podcastIndex/trending/podcastsGet] Starting trending podcasts fetch...');
+    loggerService.info('[podcastIndex/trending/podcastsGet] Starting trending podcasts fetch...');
 
     let max = 1000;
     let since: number | undefined;
@@ -31,20 +30,14 @@ const podcastIndexTrendingPodcastsGet = async (args: CommandLineArgs) => {
       cat = Array.isArray(args.cat) ? args.cat[0] : args.cat;
     }
 
-    const podcastIndexService = new PodcastIndexService({
-      authKey: config.podcastIndex.authKey,
-      baseUrl: config.podcastIndex.baseUrl,
-      secretKey: config.podcastIndex.secretKey,
-    });
-
     const { feeds } = await podcastIndexService.trendingGetPodcasts(max, since, lang, cat);
 
-    logger.info(`[podcastIndex/trending/podcastsGet] Fetched ${feeds.length} trending feeds.`);
-    logger.info('[podcastIndex/trending/podcastsGet] Example feeds:', feeds.slice(0, 3));
+    loggerService.info(`[podcastIndex/trending/podcastsGet] Fetched ${feeds.length} trending feeds.`);
+    loggerService.info('[podcastIndex/trending/podcastsGet] Example feeds:', feeds.slice(0, 3));
 
     return feeds;
   } catch (error) {
-    logger.error('[podcastIndex/trending/podcastsGet] Error fetching trending podcasts:', error);
+    loggerService.error('[podcastIndex/trending/podcastsGet] Error fetching trending podcasts:', error);
     throw error;
   }
 };

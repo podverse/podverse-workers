@@ -1,14 +1,8 @@
-import { PodcastIndexService } from 'podverse-external-services';
 import { parseRSSFeedAndSaveToDatabase } from 'podverse-parser';
 import { ChannelService, FeedService } from 'podverse-orm';
+import { podcastIndexService } from '../../../factories/podcastIndexService';
 
 export const loadTestData = async (podcast_index_id_1: number, podcast_index_id_2: number) => {
-  const podcastIndexService = new PodcastIndexService({
-    authKey: process.env.PODCAST_INDEX_AUTH_KEY!,
-    baseUrl: process.env.PODCAST_INDEX_BASE_URL!,
-    secretKey: process.env.PODCAST_INDEX_SECRET_KEY!
-  });
-
   // 1. Get feed data for podcast_index_id_1
   const feedData = await podcastIndexService.podcastGetById(podcast_index_id_1);
   if (!feedData?.feed?.url) {

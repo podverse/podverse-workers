@@ -1,5 +1,4 @@
-import { PodcastIndexService } from 'podverse-external-services';
-import { config } from '@workers/config';
+import { podcastIndexService } from '@workers/factories/podcastIndexService';
 import { DeduplicatorService } from '@workers/lib/deduplicator';
 import fs from 'fs';
 
@@ -40,12 +39,6 @@ export function podcastIndexDeadFeedsDeleteCache() {
 }
 
 export const podcastIndexDeadFeedsFlagAndMerge = async () => {
-  const podcastIndexService = new PodcastIndexService({
-    authKey: config.podcastIndex.authKey,
-    baseUrl: config.podcastIndex.baseUrl,
-    secretKey: config.podcastIndex.secretKey
-  });
-
   const deduplicatorService = new DeduplicatorService();
   let itemCount = 0;
   const cache = loadCache();

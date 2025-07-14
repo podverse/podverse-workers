@@ -1,4 +1,5 @@
 import { CommandLineArgs } from "@workers/commands";
+import { rabbitMQService } from "@workers/factories/rabbitMQService";
 import { QueueName, queueNames, queueRSSRunParser as queueRSSRunParserFunction } from 'podverse-queue';
 
 export const queueRSSRunParser = async (args: CommandLineArgs) => {
@@ -11,7 +12,10 @@ export const queueRSSRunParser = async (args: CommandLineArgs) => {
     throw new Error(`Invalid queueName. Allowed values are: ${queueNames.join(', ')}`);
   }
 
-  await queueRSSRunParserFunction(queueName as QueueName);
+  await queueRSSRunParserFunction(
+    rabbitMQService,
+    queueName as QueueName
+  );
 
   while (true) {
     await new Promise(resolve => setTimeout(resolve, 1000));
