@@ -17,6 +17,11 @@ export const parserRSSParseFeed = async (args: CommandLineArgs) => {
   if (!feedUrl) {
     throw new Error(`No feedUrl found for podcast_index_id ${podcast_index_id}`);
   }
+  
+  const hasForceParse = (
+    typeof args.f !== 'undefined' || typeof args.forceParse !== 'undefined'
+  );
+  const options = hasForceParse ? { forceParse: true } : {};
 
-  await parseRSSFeedAndSaveToDatabase(feedUrl, Number(podcast_index_id));
+  await parseRSSFeedAndSaveToDatabase(feedUrl, Number(podcast_index_id), options);
 };
