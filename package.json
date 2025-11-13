@@ -41,7 +41,6 @@
     "podverse-orm": "^5.0.5",
     "podverse-parser": "^5.0.9",
     "podverse-queue": "^5.0.6",
-    "shortid": "^2.2.17",
     "typeorm": "^0.3.26",
     "typeorm-naming-strategies": "^4.1.0",
     "winston": "^3.17.0"
