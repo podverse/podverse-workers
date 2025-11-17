@@ -1,18 +1,18 @@
 import { CommandLineArgs } from '@workers/commands';
 import { podcastIndexService } from '@workers/factories/podcastIndexService';
 import { activeMQArtemisService } from '@workers/factories/activeMQArtemisService';
-import { QueueName, validQueueNames,
-  queueRSSAddRecentlyUpdatedFeedsFromPodcastIndex as queueRSSAddRecentlyUpdatedFeedsFromPodcastIndexFunction
+import { queueRSSAddRecentlyUpdatedFeedsFromPodcastIndex as queueRSSAddRecentlyUpdatedFeedsFromPodcastIndexFunction
 } from 'podverse-queue';
+import { MQ_QUEUES, QueueNameParamKey, validQueueNamesParamKeys } from 'podverse-helpers';
 
 export const queueRSSAddRecentlyUpdatedFeedsFromPodcastIndex = async (args: CommandLineArgs) => {
-  const queueName = Array.isArray(args.q) ? args.q[0] : args.q;
-  if (!queueName) {
+  const queueNameParamKey = (Array.isArray(args.q) ? args.q[0] : args.q) as QueueNameParamKey | undefined;
+  if (!queueNameParamKey) {
     throw new Error('queueName (-q) parameter is required');
   }
 
-  if (!validQueueNames.includes(queueName as QueueName)) {
-    throw new Error(`Invalid queueName. Allowed values are: ${validQueueNames.join(', ')}`);
+  if (!validQueueNamesParamKeys.includes(queueNameParamKey)) {
+    throw new Error(`Invalid queueName. Allowed values are: ${validQueueNamesParamKeys.join(', ')}`);
   }
 
   let sinceRange: number | undefined;
@@ -28,13 +28,14 @@ export const queueRSSAddRecentlyUpdatedFeedsFromPodcastIndex = async (args: Comm
     throw new Error('sinceRange (-sr) parameter is required');
   }
 
+  const mqConstantMessageOptions = MQ_QUEUES[queueNameParamKey];
+
   await queueRSSAddRecentlyUpdatedFeedsFromPodcastIndexFunction(
     activeMQArtemisService,
     podcastIndexService,
     {
-      queueName,
-      sinceRange,
-      priority: 'normal'
+      ...mqConstantMessageOptions,
+      sinceRange
     }
   );
 };
