@@ -4,7 +4,6 @@ import { parserRSSParseFeed } from "@workers/commands/parser/rss/parseFeed";
 import { podcastIndexDeadFeedsDeleteCache, podcastIndexDeadFeedsFlagAndMerge } from "@workers/commands/podcastIndex/deadFeeds/flagAndMerge";
 import podcastIndexTrendingPodcastsGet from "@workers/commands/podcastIndex/trending/podcastsGet";
 import { podcastIndexValueUpdateAll } from "@workers/commands/podcastIndex/value/updateAll";
-import { queueDeleteAll } from "@workers/commands/queue/deleteAll";
 import { queueRSSAdd } from "@workers/commands/queue/rss/add";
 import { queueRSSAddAll } from "@workers/commands/queue/rss/addAll";
 import { queueRSSRunParser } from "@workers/commands/queue/rss/runParser";
@@ -24,7 +23,6 @@ export default {
   podcastIndexDeadFeedsFlagAndMerge,
   podcastIndexTrendingPodcastsGet,
   podcastIndexValueUpdateAll,
-  queueDeleteAll,
   queueRSSAdd,
   queueRSSAddAll,
   queueRSSRunParser,

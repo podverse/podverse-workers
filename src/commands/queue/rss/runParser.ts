@@ -1,5 +1,5 @@
 import { CommandLineArgs } from "@workers/commands";
-import { rabbitMQService } from "@workers/factories/rabbitMQService";
+import { activeMQArtemisService } from "@workers/factories/activeMQArtemisService";
 import { QueueName, queueNames, queueRSSRunParser as queueRSSRunParserFunction } from 'podverse-queue';
 
 export const queueRSSRunParser = async (args: CommandLineArgs) => {
@@ -13,7 +13,7 @@ export const queueRSSRunParser = async (args: CommandLineArgs) => {
   }
 
   await queueRSSRunParserFunction(
-    rabbitMQService,
+    activeMQArtemisService,
     queueName as QueueName
   );
 

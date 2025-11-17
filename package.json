@@ -19,7 +19,6 @@
     "podcast_index_dead_feeds_flag_and_merge": "ts-node ./src/index.ts podcastIndexDeadFeedsFlagAndMerge",
     "podcast_index_trending_podcasts_get": "ts-node ./src/index.ts podcastIndexTrendingPodcastsGet",
     "podcast_index_value_update_all": "ts-node ./src/index.ts podcastIndexValueUpdateAll",
-    "queue_delete_all": "ts-node ./src/index.ts queueDeleteAll",
     "queue_rss_add": "ts-node ./src/index.ts queueRSSAdd",
     "queue_rss_add_all": "ts-node ./src/index.ts queueRSSAddAll",
     "queue_rss_add_recently_updated_feeds_from_podcast_index": "ts-node ./src/index.ts queueRSSAddRecentlyUpdatedFeedsFromPodcastIndex",

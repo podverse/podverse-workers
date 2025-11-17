@@ -1,6 +1,6 @@
 import { QueueName, queueNames, queueRSSAddAll as queueRSSAddAllFunction } from 'podverse-queue';
 import { CommandLineArgs } from "@workers/commands";
-import { rabbitMQService } from '@workers/factories/rabbitMQService';
+import { activeMQArtemisService } from '@workers/factories/activeMQArtemisService';
 
 export const queueRSSAddAll = async (args: CommandLineArgs) => {
   const queueName = Array.isArray(args.q) ? args.q[0] : args.q;
@@ -13,7 +13,7 @@ export const queueRSSAddAll = async (args: CommandLineArgs) => {
   }
 
   await queueRSSAddAllFunction(
-    rabbitMQService,
+    activeMQArtemisService,
     { queueName: queueName as QueueName }
   );
 };

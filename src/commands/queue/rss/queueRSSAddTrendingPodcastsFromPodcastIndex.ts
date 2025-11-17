@@ -1,6 +1,6 @@
 import { CommandLineArgs } from '@workers/commands';
 import { podcastIndexService } from '@workers/factories/podcastIndexService';
-import { rabbitMQService } from '@workers/factories/rabbitMQService';
+import { activeMQArtemisService } from '@workers/factories/activeMQArtemisService';
 import { QueueName, queueNames,
   queueRSSAddTrendingPodcastsFromPodcastIndex as queueRSSAddTrendingPodcastsFromPodcastIndexFunction } from 'podverse-queue';
 
@@ -23,7 +23,7 @@ export const queueRSSAddTrendingPodcastsFromPodcastIndex = async (args: CommandL
   }
 
   await queueRSSAddTrendingPodcastsFromPodcastIndexFunction(
-    rabbitMQService,
+    activeMQArtemisService,
     podcastIndexService,
     { queueName, maxFeeds }
   );
