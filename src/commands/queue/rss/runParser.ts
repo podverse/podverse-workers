@@ -1,6 +1,6 @@
 import { CommandLineArgs } from "@workers/commands";
 import { activeMQArtemisService } from "@workers/factories/activeMQArtemisService";
-import { QueueName, queueNames, queueRSSRunParser as queueRSSRunParserFunction } from 'podverse-queue';
+import { QueueName, validQueueNames, queueRSSRunParser as queueRSSRunParserFunction } from 'podverse-queue';
 
 export const queueRSSRunParser = async (args: CommandLineArgs) => {
   const queueName = Array.isArray(args.q) ? args.q[0] : args.q;
@@ -8,8 +8,8 @@ export const queueRSSRunParser = async (args: CommandLineArgs) => {
     throw new Error('queueName (-q) parameter is required');
   }
 
-  if (!queueNames.includes(queueName as QueueName)) {
-    throw new Error(`Invalid queueName. Allowed values are: ${queueNames.join(', ')}`);
+  if (!validQueueNames.includes(queueName as QueueName)) {
+    throw new Error(`Invalid queueName. Allowed values are: ${validQueueNames.join(', ')}`);
   }
 
   await queueRSSRunParserFunction(

@@ -1,4 +1,4 @@
-import { QueueName, queueNames, queueRSSAdd as queueRSSAddFunction } from 'podverse-queue';
+import { QueueName, validQueueNames, queueRSSAdd as queueRSSAddFunction } from 'podverse-queue';
 import { CommandLineArgs } from "@workers/commands";
 import { activeMQArtemisService } from '@workers/factories/activeMQArtemisService';
 import { podcastIndexService } from '@workers/factories/podcastIndexService';
@@ -9,8 +9,8 @@ export const queueRSSAdd = async (args: CommandLineArgs) => {
     throw new Error('queueName (-q) parameter is required');
   }
 
-  if (!queueNames.includes(queueName as QueueName)) {
-    throw new Error(`Invalid queueName. Allowed values are: ${queueNames.join(', ')}`);
+  if (!validQueueNames.includes(queueName as QueueName)) {
+    throw new Error(`Invalid queueName. Allowed values are: ${validQueueNames.join(', ')}`);
   }
 
   const podcastIndexIdArg = Array.isArray(args.p) ? args.p[0] : args.p;

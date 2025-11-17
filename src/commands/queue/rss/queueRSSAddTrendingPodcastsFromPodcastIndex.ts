@@ -1,7 +1,7 @@
 import { CommandLineArgs } from '@workers/commands';
 import { podcastIndexService } from '@workers/factories/podcastIndexService';
 import { activeMQArtemisService } from '@workers/factories/activeMQArtemisService';
-import { QueueName, queueNames,
+import { QueueName, validQueueNames,
   queueRSSAddTrendingPodcastsFromPodcastIndex as queueRSSAddTrendingPodcastsFromPodcastIndexFunction } from 'podverse-queue';
 
 export const queueRSSAddTrendingPodcastsFromPodcastIndex = async (args: CommandLineArgs) => {
@@ -10,8 +10,8 @@ export const queueRSSAddTrendingPodcastsFromPodcastIndex = async (args: CommandL
     throw new Error('queueName (-q) parameter is required');
   }
 
-  if (!queueNames.includes(queueName as QueueName)) {
-    throw new Error(`Invalid queueName. Allowed values are: ${queueNames.join(', ')}`);
+  if (!validQueueNames.includes(queueName as QueueName)) {
+    throw new Error(`Invalid queueName. Allowed values are: ${validQueueNames.join(', ')}`);
   }
 
   let maxFeeds = 50;
