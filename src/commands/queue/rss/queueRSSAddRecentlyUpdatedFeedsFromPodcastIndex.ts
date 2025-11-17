@@ -31,6 +31,10 @@ export const queueRSSAddRecentlyUpdatedFeedsFromPodcastIndex = async (args: Comm
   await queueRSSAddRecentlyUpdatedFeedsFromPodcastIndexFunction(
     activeMQArtemisService,
     podcastIndexService,
-    { queueName, sinceRange }
+    {
+      queueName,
+      sinceRange,
+      priority: 'normal'
+    }
   );
 };

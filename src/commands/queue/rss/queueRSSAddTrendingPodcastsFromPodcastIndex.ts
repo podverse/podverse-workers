@@ -25,6 +25,10 @@ export const queueRSSAddTrendingPodcastsFromPodcastIndex = async (args: CommandL
   await queueRSSAddTrendingPodcastsFromPodcastIndexFunction(
     activeMQArtemisService,
     podcastIndexService,
-    { queueName, maxFeeds }
+    {
+      queueName,
+      maxFeeds,
+      priority: 'normal'
+    }
   );
 };

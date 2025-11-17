@@ -34,7 +34,8 @@ export const queueRSSAdd = async (args: CommandLineArgs) => {
     {
       queueName: queueName as QueueName,
       feedUrl,
-      podcastIndexId
+      podcastIndexId,
+      priority: 'normal'
     }
   );
 };

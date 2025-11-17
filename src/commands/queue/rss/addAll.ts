@@ -1,4 +1,4 @@
-import { QueueName, validQueueNames, queueRSSAddAll as queueRSSAddAllFunction } from 'podverse-queue';
+import { QueueName, validQueueNames, queueRSSAddAll as queueRSSAddAllFunction } from 'podverse-queue';,
 import { CommandLineArgs } from "@workers/commands";
 import { activeMQArtemisService } from '@workers/factories/activeMQArtemisService';
 
@@ -14,6 +14,9 @@ export const queueRSSAddAll = async (args: CommandLineArgs) => {
 
   await queueRSSAddAllFunction(
     activeMQArtemisService,
-    { queueName: queueName as QueueName }
+    {
+      queueName: queueName as QueueName,
+      priority: 'normal'
+    }
   );
 };
