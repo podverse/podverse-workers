@@ -4,11 +4,11 @@ import { parserRSSParseFeed } from "@workers/commands/parser/rss/parseFeed";
 import { podcastIndexDeadFeedsDeleteCache, podcastIndexDeadFeedsFlagAndMerge } from "@workers/commands/podcastIndex/deadFeeds/flagAndMerge";
 import podcastIndexTrendingPodcastsGet from "@workers/commands/podcastIndex/trending/podcastsGet";
 import { podcastIndexValueUpdateAll } from "@workers/commands/podcastIndex/value/updateAll";
-import { queueRSSAdd } from "@workers/commands/queue/rss/add";
-import { queueRSSAddAll } from "@workers/commands/queue/rss/addAll";
-import { queueRSSRunParser } from "@workers/commands/queue/rss/runParser";
-import { queueRSSAddRecentlyUpdatedFeedsFromPodcastIndex } from "@workers/commands/queue/rss/queueRSSAddRecentlyUpdatedFeedsFromPodcastIndex";
-import { queueRSSAddTrendingPodcastsFromPodcastIndex } from "@workers/commands/queue/rss/queueRSSAddTrendingPodcastsFromPodcastIndex";
+import { mqRSSAdd } from "@workers/commands/mq/rss/add";
+import { mqRSSAddAll } from "@workers/commands/mq/rss/addAll";
+import { mqRSSRunParser } from "@workers/commands/mq/rss/runParser";
+import { mqRSSAddRecentlyUpdatedFeedsFromPodcastIndex } from "@workers/commands/mq/rss/mqRSSAddRecentlyUpdatedFeedsFromPodcastIndex";
+import { mqRSSAddTrendingPodcastsFromPodcastIndex } from "@workers/commands/queue/rss/mqRSSAddTrendingPodcastsFromPodcastIndex";
 import { sandboxRun } from "@workers/commands/sandbox/sandbox";
 import { statsUpdateAggregated } from "@workers/commands/stats/statsUpdateAggregated";
 import { statsUpdateAggregatedRolling } from "@workers/commands/stats/statsUpdateAggregatedRolling";
@@ -23,11 +23,11 @@ export default {
   podcastIndexDeadFeedsFlagAndMerge,
   podcastIndexTrendingPodcastsGet,
   podcastIndexValueUpdateAll,
-  queueRSSAdd,
-  queueRSSAddAll,
-  queueRSSRunParser,
-  queueRSSAddRecentlyUpdatedFeedsFromPodcastIndex,
-  queueRSSAddTrendingPodcastsFromPodcastIndex,
+  mqRSSAdd,
+  mqRSSAddAll,
+  mqRSSRunParser,
+  mqRSSAddRecentlyUpdatedFeedsFromPodcastIndex,
+  mqRSSAddTrendingPodcastsFromPodcastIndex,
   sandboxRun,
   statsUpdateAggregated,
   statsUpdateAggregatedRolling

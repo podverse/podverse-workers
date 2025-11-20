@@ -1,17 +1,17 @@
-import { queueRSSAdd as queueRSSAddFunction } from 'podverse-queue';
+import { MQ_QUEUES, MQQueueNameParamKey, validMQQueueNamesParamKeys } from 'podverse-helpers';
+import { mqRSSAdd as mqRSSAddFunction } from 'podverse-mq';
 import { CommandLineArgs } from "@workers/commands";
 import { activeMQArtemisService } from '@workers/factories/activeMQArtemisService';
 import { podcastIndexService } from '@workers/factories/podcastIndexService';
-import { MQ_QUEUES, QueueNameParamKey, validQueueNamesParamKeys } from 'podverse-helpers';
 
-export const queueRSSAdd = async (args: CommandLineArgs) => {
-  const queueNameParamKey = (Array.isArray(args.q) ? args.q[0] : args.q) as QueueNameParamKey | undefined;
-  if (!queueNameParamKey) {
+export const mqRSSAdd = async (args: CommandLineArgs) => {
+  const mqQueueNameParamKey = (Array.isArray(args.q) ? args.q[0] : args.q) as MQQueueNameParamKey | undefined;
+  if (!mqQueueNameParamKey) {
     throw new Error('queueName (-q) parameter is required');
   }
 
-  if (!validQueueNamesParamKeys.includes(queueNameParamKey)) {
-    throw new Error(`Invalid queueName. Allowed values are: ${validQueueNamesParamKeys.join(', ')}`);
+  if (!validMQQueueNamesParamKeys.includes(mqQueueNameParamKey)) {
+    throw new Error(`Invalid queueName. Allowed values are: ${validMQQueueNamesParamKeys.join(', ')}`);
   }
 
   const podcastIndexIdArg = Array.isArray(args.p) ? args.p[0] : args.p;
@@ -30,9 +30,9 @@ export const queueRSSAdd = async (args: CommandLineArgs) => {
     throw new Error(`No feedUrl found for podcast_index_id ${podcastIndexId}`);
   }
 
-  const mqConstantMessageOptions = MQ_QUEUES[queueNameParamKey];
+  const mqConstantMessageOptions = MQ_QUEUES[mqQueueNameParamKey];
 
-  await queueRSSAddFunction(
+  await mqRSSAddFunction(
     activeMQArtemisService,
     {
       ...mqConstantMessageOptions,
