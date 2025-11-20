@@ -31,5 +31,5 @@ export async function ormFeedUpdateFlagStatus() {
   }
 
   await feedService.updateFlagStatus(feed, feed_flag_status_id as FeedFlagStatusStatusEnum);
-  console.log(`Feed flag status updated for podcast_index_id ${podcast_index_id} to ${feed_flag_status_id}`);
+  console.info(`Feed flag status updated for podcast_index_id ${podcast_index_id} to ${feed_flag_status_id}`);
 }

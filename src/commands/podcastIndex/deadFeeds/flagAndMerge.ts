@@ -29,9 +29,9 @@ export function podcastIndexDeadFeedsDeleteCache() {
   try {
     if (fs.existsSync(CACHE_FILE_PATH)) {
       fs.unlinkSync(CACHE_FILE_PATH);
-      console.log('Cache file deleted.');
+      console.info('Cache file deleted.');
     } else {
-      console.log('Cache file does not exist.');
+      console.warn('Cache file does not exist.');
     }
   } catch (err) {
     console.error('Failed to delete cache file:', err);
@@ -51,13 +51,13 @@ export const podcastIndexDeadFeedsFlagAndMerge = async () => {
 
     if (cache.has(id_to_archive)) {
       if (itemCount % 100000 === 0) {
-        console.log(`Skipped ${itemCount} feeds. Already handled id_to_archive: ${id_to_archive}`);
+        console.info(`Skipped ${itemCount} feeds. Already handled id_to_archive: ${id_to_archive}`);
       }
       return;
     }
 
     if (itemCount % 100000 === 0) {
-      console.log(`Processed ${itemCount} feeds. Current parsedData:`, parsedData);
+      console.info(`Processed ${itemCount} feeds. Current parsedData:`, parsedData);
     }
     try {
       await deduplicatorService.handleDuplicatePodcastIndexId(id_to_archive, duplicate_id_to_keep);
