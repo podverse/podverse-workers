@@ -38,7 +38,7 @@
     "podverse-helpers": "^5.1.0",
     "podverse-orm": "^5.0.5",
     "podverse-parser": "^5.0.9",
-    "podverse-mq": "^5.0.6",
+    "podverse-mq": "^5.0.0",
     "typeorm": "^0.3.26",
     "typeorm-naming-strategies": "^4.1.0",
     "winston": "^3.17.0"

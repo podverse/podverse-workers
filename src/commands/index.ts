@@ -8,7 +8,6 @@ import { mqRSSAdd } from "@workers/commands/mq/rss/add";
 import { mqRSSAddAll } from "@workers/commands/mq/rss/addAll";
 import { mqRSSRunParser } from "@workers/commands/mq/rss/runParser";
 import { mqRSSAddRecentlyUpdatedFeedsFromPodcastIndex } from "@workers/commands/mq/rss/mqRSSAddRecentlyUpdatedFeedsFromPodcastIndex";
-import { mqRSSAddTrendingPodcastsFromPodcastIndex } from "@workers/commands/queue/rss/mqRSSAddTrendingPodcastsFromPodcastIndex";
 import { sandboxRun } from "@workers/commands/sandbox/sandbox";
 import { statsUpdateAggregated } from "@workers/commands/stats/statsUpdateAggregated";
 import { statsUpdateAggregatedRolling } from "@workers/commands/stats/statsUpdateAggregatedRolling";
@@ -27,7 +26,6 @@ export default {
   mqRSSAddAll,
   mqRSSRunParser,
   mqRSSAddRecentlyUpdatedFeedsFromPodcastIndex,
-  mqRSSAddTrendingPodcastsFromPodcastIndex,
   sandboxRun,
   statsUpdateAggregated,
   statsUpdateAggregatedRolling
