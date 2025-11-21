@@ -22,6 +22,7 @@
     "mq_rss_add": "ts-node ./src/index.ts mqRSSAdd",
     "mq_rss_add_all": "ts-node ./src/index.ts mqRSSAddAll",
     "mq_rss_add_recently_updated_feeds_from_podcast_index": "ts-node ./src/index.ts mqRSSAddRecentlyUpdatedFeedsFromPodcastIndex",
+    "mq_rss_run_live_item_listener": "ts-node ./src/index.ts mqRSSRunLiveItemListener",
     "mq_rss_run_parser": "ts-node ./src/index.ts mqRSSRunParser",
     "stats_update_aggregated": "ts-node ./src/index.ts statsUpdateAggregated"
   },

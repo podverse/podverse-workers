@@ -10,6 +10,7 @@ import { mqRSSRunParser } from "@workers/commands/mq/rss/runParser";
 import { mqRSSAddRecentlyUpdatedFeedsFromPodcastIndex } from "@workers/commands/mq/rss/mqRSSAddRecentlyUpdatedFeedsFromPodcastIndex";
 import { statsUpdateAggregated } from "@workers/commands/stats/statsUpdateAggregated";
 import { statsUpdateAggregatedRolling } from "@workers/commands/stats/statsUpdateAggregatedRolling";
+import { mqRSSRunLiveItemListener } from "./mq/rss/runLiveItemListener";
 
 export type CommandLineArgs = { [key: string]: string | string[] };
 
@@ -24,6 +25,7 @@ export default {
   mqRSSAdd,
   mqRSSAddAll,
   mqRSSRunParser,
+  mqRSSRunLiveItemListener,
   mqRSSAddRecentlyUpdatedFeedsFromPodcastIndex,
   statsUpdateAggregated,
   statsUpdateAggregatedRolling
