@@ -23,7 +23,7 @@ export async function ormFeedUpdateFlagStatus() {
   }
 
   const feedService = new FeedService();
-  const feed = await feedService.getByPodcastIndexId({ podcast_index_id });
+  const feed = await feedService.getByPodcastIndexId(podcast_index_id);
 
   if (!feed) {
     console.error(`Feed not found for podcast_index_id: ${podcast_index_id}`);

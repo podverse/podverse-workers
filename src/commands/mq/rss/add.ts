@@ -19,15 +19,15 @@ export const mqRSSAdd = async (args: CommandLineArgs) => {
     throw new Error('podcast_index_id (-p) parameter is required');
   }
 
-  const podcastIndexId = Number(podcastIndexIdArg);
-  if (isNaN(podcastIndexId)) {
+  const podcast_index_id = Number(podcastIndexIdArg);
+  if (isNaN(podcast_index_id)) {
     throw new Error('podcast_index_id (-p) must be a number');
   }
 
-  const feedData = await podcastIndexService.podcastGetById(podcastIndexId);
+  const feedData = await podcastIndexService.podcastGetById(podcast_index_id);
   const feedUrl = feedData?.feed?.url;
   if (!feedUrl) {
-    throw new Error(`No feedUrl found for podcast_index_id ${podcastIndexId}`);
+    throw new Error(`No feedUrl found for podcast_index_id ${podcast_index_id}`);
   }
 
   const mqConstantMessageOptions = MQ_QUEUES[mqQueueNameParamKey];
@@ -37,7 +37,7 @@ export const mqRSSAdd = async (args: CommandLineArgs) => {
     {
       ...mqConstantMessageOptions,
       feedUrl,
-      podcastIndexId
+      podcast_index_id
     }
   );
 };
