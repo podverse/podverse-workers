@@ -1,6 +1,6 @@
 {
   "name": "podverse-workers",
-  "version": "5.1.5-develop",
+  "version": "5.1.6-develop",
   "description": "",
   "private": true,
   "main": "dist/index.js",
@@ -28,6 +28,9 @@
   },
   "author": "",
   "license": "AGPLv3",
+  "overrides": {
+    "fast-xml-parser": "^4.1.2"
+  },
   "dependencies": {
     "amqplib": "^0.10.9",
     "axios": "^1.12.2",
