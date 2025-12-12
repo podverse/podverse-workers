@@ -6,6 +6,7 @@ import podcastIndexTrendingPodcastsGet from "@workers/commands/podcastIndex/tren
 import { podcastIndexValueUpdateAll } from "@workers/commands/podcastIndex/value/updateAll";
 import { mqRSSAdd } from "@workers/commands/mq/rss/add";
 import { mqRSSAddAll } from "@workers/commands/mq/rss/addAll";
+import { mqRSSRunDlqConsumer } from "./mq/rss/dlqHandling";
 import { mqRSSRunParser } from "@workers/commands/mq/rss/runParser";
 import { mqRSSAddRecentlyUpdatedFeedsFromPodcastIndex } from "@workers/commands/mq/rss/mqRSSAddRecentlyUpdatedFeedsFromPodcastIndex";
 import { statsUpdateAggregated } from "@workers/commands/stats/statsUpdateAggregated";
@@ -24,6 +25,7 @@ export default {
   podcastIndexValueUpdateAll,
   mqRSSAdd,
   mqRSSAddAll,
+  mqRSSRunDlqConsumer,
   mqRSSRunParser,
   mqRSSRunLiveItemListener,
   mqRSSAddRecentlyUpdatedFeedsFromPodcastIndex,
