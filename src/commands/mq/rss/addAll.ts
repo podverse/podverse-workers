@@ -13,9 +13,12 @@ export const mqRSSAddAll = async (args: CommandLineArgs) => {
     throw new Error(`Invalid queueName. Allowed values are: ${validMQQueueNamesParamKeys.join(', ')}`);
   }
 
+  const forceParse = !!args.f;
+
   const mqConstantMessageOptions = MQ_QUEUES[mqQueueNameParamKey];
   await mqRSSAddAllFunction(
     activeMQArtemisService,
-    mqConstantMessageOptions
+    mqConstantMessageOptions,
+    { forceParse }
   );
 };

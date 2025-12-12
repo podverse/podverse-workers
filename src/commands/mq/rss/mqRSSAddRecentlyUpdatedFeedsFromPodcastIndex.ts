@@ -36,6 +36,7 @@ export const mqRSSAddRecentlyUpdatedFeedsFromPodcastIndex = async (args: Command
     {
       ...mqConstantMessageOptions,
       sinceRange
-    }
+    },
+    { forceParse: false }
   );
 };

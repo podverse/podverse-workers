@@ -30,6 +30,8 @@ export const mqRSSAdd = async (args: CommandLineArgs) => {
     throw new Error(`No feedUrl found for podcast_index_id ${podcast_index_id}`);
   }
 
+  const forceParse = !!args.f;
+
   const mqConstantMessageOptions = MQ_QUEUES[mqQueueNameParamKey];
 
   await mqRSSAddFunction(
@@ -38,6 +40,7 @@ export const mqRSSAdd = async (args: CommandLineArgs) => {
       ...mqConstantMessageOptions,
       feedUrl,
       podcast_index_id
-    }
+    },
+    { forceParse }
   );
 };
