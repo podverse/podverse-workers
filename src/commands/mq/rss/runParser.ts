@@ -1,7 +1,7 @@
 import { CommandLineArgs } from "@workers/commands";
 import { activeMQArtemisService } from "@workers/factories/activeMQArtemisService";
 import { MQ_QUEUES, MQQueueNameParamKey, validMQQueueNamesParamKeys } from "podverse-helpers";
-import { mqRSSRunParser as mqRSSRunParserFunction, getIsProcessing } from 'podverse-mq';
+import { mqRSSRunParser as mqRSSRunParserFunction } from 'podverse-mq';
 
 let isShuttingDown = false;
 
@@ -17,30 +17,19 @@ export const mqRSSRunParser = async (args: CommandLineArgs) => {
 
   const mqConstantMessageOptions = MQ_QUEUES[mqQueueNameParamKey];
 
-  // Setup graceful shutdown handlers
+  // Setup shutdown handlers that IGNORE the signal (for testing stop_grace_period)
   const shutdown = async () => {
     if (isShuttingDown) return;
     isShuttingDown = true;
     
-    console.log('Shutdown signal received.');
+    console.log('Shutdown signal received - IGNORING IT TO TEST stop_grace_period');
+    console.log('Waiting for Docker to force kill after 5m...');
     
-    // First, close receivers to stop accepting new messages from the broker
-    // This prevents new messages from entering the processing pipeline
-    await activeMQArtemisService.close();
-    console.log('Stopped accepting new messages from broker.');
-    
-    // Now wait for any in-progress parsing to complete
-    // Messages already received before close() are still in the handler
-    if (getIsProcessing()) {
-      console.log('Waiting for current parsing operation to complete...');
-      while (getIsProcessing()) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      }
-      console.log('Processing complete.');
+    // Just wait forever - Docker will eventually force kill us
+    while (true) {
+      await new Promise(resolve => setTimeout(resolve, 10000));
+      console.log('Still waiting for force kill...');
     }
-    
-    console.log('Graceful shutdown complete');
-    process.exit(0);
   };
 
   process.on('SIGTERM', shutdown);
