@@ -29,6 +29,7 @@ dist/**/*
 
 # Logging files
 *.log
+*-audit.json
 
 temp
 
