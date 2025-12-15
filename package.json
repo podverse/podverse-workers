@@ -25,6 +25,8 @@
     "mq_rss_run_live_item_listener": "ts-node ./src/index.ts mqRSSRunLiveItemListener",
     "mq_rss_run_parser": "ts-node ./src/index.ts mqRSSRunParser",
     "mq_rss_run_dlq_consumer": "ts-node ./src/index.ts mqRSSRunDlqConsumer",
+    "orm_on_demand_parser_event_delete_outdated": "ts-node ./src/index.ts deleteOutdatedOnDemandParserEvent",
+    "orm_on_demand_parser_event_generate_reports": "ts-node ./src/index.ts generateOnDemandParserEventReports",
     "stats_update_aggregated": "ts-node ./src/index.ts statsUpdateAggregated"
   },
   "author": "",

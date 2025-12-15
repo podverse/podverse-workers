@@ -12,6 +12,8 @@ import { mqRSSAddRecentlyUpdatedFeedsFromPodcastIndex } from "@workers/commands/
 import { statsUpdateAggregated } from "@workers/commands/stats/statsUpdateAggregated";
 import { statsUpdateAggregatedRolling } from "@workers/commands/stats/statsUpdateAggregatedRolling";
 import { mqRSSRunLiveItemListener } from "./mq/rss/runLiveItemListener";
+import { generateOnDemandParserEventReports } from './orm/onDemandParserEvent/generateOnDemandParserEventReports';
+import { deleteOutdatedOnDemandParserEvent } from './orm/onDemandParserEvent/deleteOutdatedOnDemandParserEvent';
 
 export type CommandLineArgs = { [key: string]: string | string[] };
 
@@ -30,5 +32,7 @@ export default {
   mqRSSRunLiveItemListener,
   mqRSSAddRecentlyUpdatedFeedsFromPodcastIndex,
   statsUpdateAggregated,
-  statsUpdateAggregatedRolling
+  statsUpdateAggregatedRolling,
+  generateOnDemandParserEventReports,
+  deleteOutdatedOnDemandParserEvent,
 } as { [key: string]: (args: CommandLineArgs) => void };
