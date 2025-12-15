@@ -9,7 +9,7 @@ export const mqRSSRunDlqConsumer = async () => {
 
   await activeMQArtemisService.initialize();
 
-  const dlqLogger = createDailyRotateLogger('dlq');
+  const dlqLogger = createDailyRotateLogger('dlq/dlq');
 
   const loggerFunc = (logMessage: string) => {
     try {
