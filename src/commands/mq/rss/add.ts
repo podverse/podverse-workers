@@ -41,6 +41,13 @@ export const mqRSSAdd = async (args: CommandLineArgs) => {
       feedUrl,
       podcast_index_id
     },
-    { forceParse }
+    {
+      forceParse,
+      onDemandParserEvent: {
+        accountId: null,
+        type: null,
+        remoteParentPodcastIndexId: null
+      }
+    }
   );
 };

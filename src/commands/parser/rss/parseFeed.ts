@@ -21,7 +21,21 @@ export const parserRSSParseFeed = async (args: CommandLineArgs) => {
   const hasForceParse = (
     typeof args.f !== 'undefined' || typeof args.forceParse !== 'undefined'
   );
-  const options = hasForceParse ? { forceParse: true } : {};
+  const options = hasForceParse ? {
+    forceParse: true,
+    onDemandParserEvent: {
+      accountId: null,
+      type: null,
+      remoteParentPodcastIndexId: null
+    }
+  } : {
+    forceParse: false,
+    onDemandParserEvent: {
+      accountId: null,
+      type: null,
+      remoteParentPodcastIndexId: null
+    }
+  };
 
   await parseRSSFeedAndSaveToDatabase(feedUrl, Number(podcast_index_id), options);
 };

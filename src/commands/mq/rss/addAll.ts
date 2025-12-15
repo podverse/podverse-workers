@@ -19,6 +19,13 @@ export const mqRSSAddAll = async (args: CommandLineArgs) => {
   await mqRSSAddAllFunction(
     activeMQArtemisService,
     mqConstantMessageOptions,
-    { forceParse }
+    {
+      forceParse,
+      onDemandParserEvent: {
+        accountId: null,
+        type: null,
+        remoteParentPodcastIndexId: null
+      }
+    }
   );
 };
