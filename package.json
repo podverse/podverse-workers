@@ -1,6 +1,6 @@
 {
   "name": "podverse-workers",
-  "version": "5.1.7-develop",
+  "version": "5.1.8-develop",
   "description": "",
   "private": true,
   "main": "dist/index.js",
