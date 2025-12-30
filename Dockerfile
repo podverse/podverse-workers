@@ -5,3 +5,6 @@ COPY . .
 
 RUN npm install
 RUN npm run build
+
+RUN chown -R node:node /opt || true
+USER node
