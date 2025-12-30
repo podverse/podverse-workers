@@ -1,7 +1,7 @@
 import { CommandLineArgs } from "@workers/commands";
 import { activeMQArtemisService } from "@workers/factories/activeMQArtemisService";
 import { MQ_QUEUES, MQQueueNameParamKey, validMQQueueNamesParamKeys } from "podverse-helpers";
-import { mqRSSRunParser as mqRSSRunParserFunction } from 'podverse-mq';
+import { mqRSSRunParser as mqRSSRunParserFunction, createActiveMQShutdown } from 'podverse-mq';
 
 export const mqRSSRunParser = async (args: CommandLineArgs) => {
   const mqQueueNameParamKey = (Array.isArray(args.q) ? args.q[0] : args.q) as MQQueueNameParamKey | undefined;
@@ -20,7 +20,17 @@ export const mqRSSRunParser = async (args: CommandLineArgs) => {
     mqConstantMessageOptions.queueName
   );
 
-  while (true) {
+  let keepRunning = true;
+
+  const { unregister } = createActiveMQShutdown(
+    activeMQArtemisService,
+    console,
+    () => { keepRunning = false; }
+  );
+
+  while (keepRunning) {
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
+
+  unregister();
 };

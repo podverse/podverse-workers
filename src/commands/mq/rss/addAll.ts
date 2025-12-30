@@ -18,7 +18,10 @@ export const mqRSSAddAll = async (args: CommandLineArgs) => {
   const mqConstantMessageOptions = MQ_QUEUES[mqQueueNameParamKey];
   await mqRSSAddAllFunction(
     activeMQArtemisService,
-    mqConstantMessageOptions,
+    {
+      ...mqConstantMessageOptions,
+      closeAfterSend: true
+    },
     {
       forceParse,
       onDemandParserEvent: {

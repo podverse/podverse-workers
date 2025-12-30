@@ -35,7 +35,8 @@ export const mqRSSAddRecentlyUpdatedFeedsFromPodcastIndex = async (args: Command
     podcastIndexService,
     {
       ...mqConstantMessageOptions,
-      sinceRange
+      sinceRange,
+      closeAfterSend: true
     },
     {
       forceParse: false,
