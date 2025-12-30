@@ -39,7 +39,8 @@ export const mqRSSAdd = async (args: CommandLineArgs) => {
     {
       ...mqConstantMessageOptions,
       feedUrl,
-      podcast_index_id
+      podcast_index_id,
+      closeAfterSend: true
     },
     {
       forceParse,
