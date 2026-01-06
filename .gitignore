@@ -30,5 +30,3 @@ dist/**/*
 *-audit.json
 
 temp
-
-config/firebase/firebase-key.json
